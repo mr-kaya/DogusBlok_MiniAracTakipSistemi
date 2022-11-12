@@ -1,12 +1,37 @@
-﻿<Window x:Class="DogusBlok_MiniAracTakipSistemi.MainWindow"
+﻿<!--
+Window head Transparent => <Window AllowsTransparency="True" Background="Transparent" WindowStyle="None"> 
+Window radius => <Border CornerRadius="15" BorderThickness="2" Background="AntiqueWhite" Padding="6">        
+-->
+<Window x:Class="DogusBlok_MiniAracTakipSistemi.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DogusBlok_MiniAracTakipSistemi"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-
-    </Grid>
+        Title="Araç Giriş Çıkış Sistemi" Height="450" Width="800">
+        <Border Background="AntiqueWhite" Padding="5">
+                <Grid>
+                        <Grid.RowDefinitions>
+                                <RowDefinition Height="50" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="20" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                
+                        <Border Grid.Row="0">
+                            
+                                
+                        </Border>
+                        <Border Grid.Row="1" >
+                                <DataGrid></DataGrid>
+                        </Border>
+                        
+                </Grid>
+        </Border>
 </Window>

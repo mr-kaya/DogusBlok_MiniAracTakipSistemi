@@ -24,5 +24,7 @@ namespace DogusBlok_MiniAracTakipSistemi
         {
             InitializeComponent();
         }
+        
+        
     }
 }
