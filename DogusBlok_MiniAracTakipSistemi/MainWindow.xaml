@@ -13,37 +13,40 @@ Window radius => <Border CornerRadius="15" BorderThickness="2" Background="Antiq
         <Border Background="AntiqueWhite" Padding="5">
                 <Grid>
                         <Grid.RowDefinitions>
-                                <RowDefinition Height="70" />
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="20" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="36" />
+                                <ColumnDefinition Width="72" />
+                                <ColumnDefinition Width="72" />
+                                <ColumnDefinition Width="72" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="36" />
                         </Grid.ColumnDefinitions>
                 
-                        <Border Grid.Column="0" Grid.Row="0">
-                            <Button HorizontalAlignment="Center" VerticalAlignment="Top" Background="Transparent" BorderThickness="0">
+                        <Border Grid.Column="1" Grid.Row="0">
+                            <Button HorizontalAlignment="Center" VerticalAlignment="Top" Background="Transparent" BorderThickness="0" Padding="10, 0">
                                     <StackPanel>
-                                            <Image Source="icons/done100.png" Height="50" Width="50" />
+                                            <Image Source="icons/add100.png" Height="50" Width="50" />
                                             <Label Padding="0" HorizontalAlignment="Center" FontWeight="SemiBold">Ekle</Label>
                                     </StackPanel>
                             </Button>
                                 
                         </Border>
-                        <Border Grid.Column="1" Grid.Row="0">
-                                <Button HorizontalAlignment="Center" VerticalAlignment="Top" Background="Transparent" BorderThickness="0">
+                        <Border Grid.Column="2" Grid.Row="0">
+                                <Button HorizontalAlignment="Center" VerticalAlignment="Top" Background="Transparent" BorderThickness="0" Padding="10, 0">
                                         <StackPanel>
-                                                <Image Source="icons/cancel100.png" Height="55" Width="55" />
+                                                <Image Source="icons/cancel100.png" Height="50" Width="50" />
                                                 <Label Padding="0" HorizontalAlignment="Center" FontWeight="SemiBold">Sil</Label>
                                         </StackPanel>
                                 </Button>
                                 
                         </Border>
-                        <Border Grid.Column="2" Grid.Row="0">
-                                <Button HorizontalAlignment="Center" VerticalAlignment="Top" Background="Transparent" BorderThickness="0">
+                        <Border Grid.Column="3" Grid.Row="0">
+                                <Button HorizontalAlignment="Center" VerticalAlignment="Top" Background="Transparent" BorderThickness="0" Padding="10, 0">
                                         <StackPanel>
                                                 <Image Source="icons/undo100.png" Height="50" Width="50" />
                                                 <Label Padding="0" HorizontalAlignment="Center" FontWeight="SemiBold">Geri Al</Label>
@@ -51,7 +54,18 @@ Window radius => <Border CornerRadius="15" BorderThickness="2" Background="Antiq
                                 </Button>
                                 
                         </Border>
-                        <Border Grid.Column="1" Grid.Row="1" >
+                        <Border Grid.Column="4" Grid.Row="0">
+                                <TextBox VerticalAlignment="Center" HorizontalAlignment="Right" Width="175" FontSize="20"></TextBox>
+                        </Border>
+                        <Border Grid.Column="5" Grid.Row="0">
+                                <Button HorizontalAlignment="Left" VerticalAlignment="Top" Background="Transparent" BorderThickness="0" Padding="10, 0">
+                                        <StackPanel>
+                                                <Image Source="icons/search100.png" Height="50" Width="50" />
+                                                <Label Padding="0" HorizontalAlignment="Center" FontWeight="SemiBold">Ara</Label>
+                                        </StackPanel>
+                                </Button>
+                        </Border>
+                        <Border Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="5" >
                                 <DataGrid></DataGrid>
                         </Border>
                         

@@ -19,11 +19,15 @@
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
       <None Remove="icons\done100.png" />
-      <Content Include="icons\done100.png">
+      <Content Include="icons\add100.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
       <None Remove="icons\cancel100.png" />
       <Content Include="icons\cancel100.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="icons\search100.png" />
+      <Content Include="icons\search100.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
     </ItemGroup>
