@@ -1,6 +1,7 @@
 ﻿<!--
 Window head Transparent => <Window AllowsTransparency="True" Background="Transparent" WindowStyle="None"> 
-Window radius => <Border CornerRadius="15" BorderThickness="2" Background="AntiqueWhite" Padding="6">        
+Window radius => <Border CornerRadius="15" BorderThickness="2" Background="AntiqueWhite" Padding="6">
+Star Fonts => David, Helvetica,         
 -->
 <Window x:Class="DogusBlok_MiniAracTakipSistemi.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -13,9 +14,9 @@ Window radius => <Border CornerRadius="15" BorderThickness="2" Background="Antiq
         <Border Background="AntiqueWhite" Padding="5">
                 <Grid>
                         <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="72" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="25" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="36" />
@@ -55,20 +56,45 @@ Window radius => <Border CornerRadius="15" BorderThickness="2" Background="Antiq
                                 
                         </Border>
                         <Border Grid.Column="4" Grid.Row="0">
-                                <TextBox VerticalAlignment="Center" HorizontalAlignment="Right" Width="175" FontSize="20"></TextBox>
+                                <TextBox Name="txtFilter" TextChanged="TxtFilter_OnTextChanged" VerticalAlignment="Center" HorizontalAlignment="Right" Width="175" FontSize="20"></TextBox>
                         </Border>
                         <Border Grid.Column="5" Grid.Row="0">
-                                <Button HorizontalAlignment="Left" VerticalAlignment="Top" Background="Transparent" BorderThickness="0" Padding="10, 0">
+                                <Button Click="BtnSearch_OnClick"
+                                        HorizontalAlignment="Left" VerticalAlignment="Top" Background="Transparent" BorderThickness="0" Padding="10, 0">
                                         <StackPanel>
                                                 <Image Source="icons/search100.png" Height="50" Width="50" />
                                                 <Label Padding="0" HorizontalAlignment="Center" FontWeight="SemiBold">Ara</Label>
                                         </StackPanel>
                                 </Button>
                         </Border>
-                        <Border Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="5" >
-                                <DataGrid></DataGrid>
+                        <Border Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="5">
+                                <ListView HorizontalAlignment="Center" VerticalAlignment="Top" Margin="20"  MinWidth="400" Background="FloralWhite" 
+                                          FontSize="14" FontWeight="Normal" FontFamily="Uni Sans"
+                                          Name="MainListView">
+                                        <ListView.Resources>
+                                                <Style TargetType="{x:Type ListViewItem}">
+                                                        <Setter Property="Height" Value="30" />
+                                                        <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding Giriş}" Value="Gelmedi">
+                                                                        <Setter Property="Background" Value="#ff5252" />
+                                                                        <Setter Property="FontWeight" Value="Bold" />
+                                                                        <Setter Property="Foreground" Value="White"></Setter>
+                                                                </DataTrigger>
+                                                        </Style.Triggers>
+                                                </Style>
+                                        </ListView.Resources>
+                                        <ListView.View>
+                                                <GridView>
+                                                        <GridViewColumn Header="İsim"
+                                                                        DisplayMemberBinding="{Binding İsim}" Width="150" />
+                                                        <GridViewColumn Header="Plaka"
+                                                                        DisplayMemberBinding="{Binding Plaka}" Width="125" />
+                                                        <GridViewColumn Header="Giriş"
+                                                                        DisplayMemberBinding="{Binding Giriş}" Width="125" />
+                                                </GridView>
+                                        </ListView.View>
+                                </ListView>
                         </Border>
-                        
                 </Grid>
         </Border>
 </Window>
