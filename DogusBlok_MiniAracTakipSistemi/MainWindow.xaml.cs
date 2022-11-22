@@ -53,7 +53,7 @@ namespace DogusBlok_MiniAracTakipSistemi
 
         private void ImportDatabaseToGridView()
         {
-            String mySqlConnectionString = "server=localhost;uid=root;database=dogusblok;";
+            String mySqlConnectionString = "server=192.168.1.105;port=3306;uid=root2;database=dogusblok;";
             MySqlConnection mySqlConn = new MySqlConnection(mySqlConnectionString);
             mySqlConn.Open();
             
