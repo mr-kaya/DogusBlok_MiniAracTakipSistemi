@@ -4,6 +4,36 @@
              xmlns:local="clr-namespace:DogusBlok_MiniAracTakipSistemi"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <Style x:Key="RoundedButtonOk" TargetType="Button">
+             <Setter Property="Background" Value="#008000" />
+             <Setter Property="Foreground" Value="White" />
+             <Setter Property="Template">
+                 <Setter.Value>
+                     <ControlTemplate TargetType="Button">
+                         <Border CornerRadius="20" Background="{TemplateBinding Background}" BorderThickness="1">
+                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center">
+                             
+                             </ContentPresenter>
+                         </Border>
+                     </ControlTemplate>
+                 </Setter.Value>
+             </Setter>
+             
+             <Style.Triggers>
+                 <Trigger Property="IsMouseOver" Value="True">
+                     <Setter Property="Background" Value="#3DC86B" />
+                 </Trigger>
+             </Style.Triggers>
+         </Style>
+        
+        <Style x:Key="RoundedButtonClose" TargetType="Button" BasedOn="{StaticResource RoundedButtonOk}">
+            <Setter Property="Background" Value="Red" />
+            
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FE6464"></Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Application.Resources>
 </Application>

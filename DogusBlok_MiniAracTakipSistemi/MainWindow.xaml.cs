@@ -20,16 +20,30 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Google.Protobuf.WellKnownTypes;
 using Color = System.Drawing.Color;
 using Path = System.IO.Path;
 
 namespace DogusBlok_MiniAracTakipSistemi
 {
-    public class Person
+    public class SevkiyatClass
     {
-        public string? İsim { get; set; }
-        public string? Plaka { get; set; }
-        public string? Giriş { get; set; }
+        public string? _Firma_İsim { get; set; }
+        public int? _Özel_Giriş { get; set; }
+        public string _Sevk_Tarih { get; set; }
+        public string? _Mamul_Cins { get; set; }
+        public string? _Mamul_Adet { get; set; }
+        public string? _Plaka { get; set; }
+        public string? _Notlar { get; set; }
+        public int? _Araç_Sevk_Durumu { get; set; }
+    }
+
+    public class GenelTerimler
+    {
+        public string? myIp { get; set; }
+        public string? databaseName { get; set; }
+        public string? userName { get; set; }
+        public string? mainTable { get; set; }
     }
     
     public partial class MainWindow : Window
@@ -38,101 +52,58 @@ namespace DogusBlok_MiniAracTakipSistemi
         {
             InitializeComponent();
 
-            var appDirectory = AppContext.BaseDirectory;
-            var excelList = Directory.GetFiles(appDirectory, "*.xlsx", SearchOption.AllDirectories);
-
-            if (excelList?.Any() ?? false)
-            {
-                ImportExcelToGridView(excelList[0]);
-            }
-            else
-            {
-                ImportDatabaseToGridView();    
-            }
+            ImportDatabaseToGridView();
         }
 
         private void ImportDatabaseToGridView()
         {
-            String mySqlConnectionString = "server=192.168.1.105;port=3306;uid=root2;database=dogusblok;";
-            MySqlConnection mySqlConn = new MySqlConnection(mySqlConnectionString);
-            mySqlConn.Open();
-            
-            MySqlCommand selectTable = new MySqlCommand(@"SELECT * FROM person", mySqlConn);
-            MySqlDataReader myDataReader = selectTable.ExecuteReader();
-
-            List<Person> items = new List<Person>();
-            while (myDataReader.Read())
+            GenelTerimler mainTerimler = new ()
             {
-                items.Add(new Person() {İsim = myDataReader[0].ToString(), Plaka = myDataReader[1].ToString(), Giriş = myDataReader[2].ToString()});
-            }
-            
-            MainListView.ItemsSource = items;
-            mySqlConn.Close();
-            
-            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(MainListView.ItemsSource);
-            view.Filter = UserFilterSearch;
-        }
-        
-        private void ImportExcelToGridView(string FilePath)
-        {
-            string connectionString = $@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source='{FilePath}';Extended Properties='excel 8.0;HDR=Yes;IMEX=1'";
-            OleDbConnection con_excel = new OleDbConnection(connectionString);
-            OleDbCommand cmd_excel = new OleDbCommand();
-            OleDbDataAdapter ole_dataAdapter = new OleDbDataAdapter();
-            DataTable dt = new DataTable();
-            cmd_excel.Connection = con_excel;
-            
-            String mySqlConnectionString = "server=localhost;uid=root;database=dogusblok;";
+                myIp = "192.168.1.105",
+                databaseName = "dogusblok",
+                userName = "root2",
+                mainTable = "sevkiyatDeneme"
+            };
+
+            String mySqlConnectionString = $"server={mainTerimler.myIp};port=3306;uid={mainTerimler.userName};database={mainTerimler.databaseName};";
             MySqlConnection mySqlConn = new MySqlConnection(mySqlConnectionString);
-            mySqlConn.Open();
-            List<Person> items = new List<Person>();
 
             try
             {
-                MySqlCommand Create_table =
-                    new MySqlCommand(
-                        @"CREATE TABLE person (name VARCHAR(100), licensePlate VARCHAR(20), entry VARCHAR(10));", mySqlConn);
-                Create_table.ExecuteNonQuery();
-
-                con_excel.Open();
-                DataTable dataExcel = con_excel.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
-                string sheetName = dataExcel.Rows[0]["TABLE_NAME"].ToString();
-
-                cmd_excel.CommandText = "Select * from [" + sheetName + "]";
-                ole_dataAdapter.SelectCommand = cmd_excel;
-                ole_dataAdapter.Fill(dt);
-
-                Debug.WriteLine($"Veritabanı veri sayısı : {dt.Rows.Count}");
-
-                for (int i = 0; i < dt.Rows.Count; i++)
-                {
-                    items.Add(new Person() { İsim =  dt.Rows[i].Field<string>(0), Plaka = dt.Rows[i].Field<string>(1), Giriş = dt.Rows[i].Field<string>(2)});
-                    MySqlCommand InsertInto =
-                        new MySqlCommand(
-                            @$"INSERT INTO person (name, licensePlate, entry) VALUES ('{dt.Rows[i].Field<string>(0)}','{dt.Rows[i].Field<string>(1)}','{dt.Rows[i].Field<string>(2)}');", mySqlConn);
-                    InsertInto.ExecuteNonQuery();
-                }
+                mySqlConn.Open();
             }
             catch (Exception e)
             {
-                Debug.WriteLine($"Tablo Oluşturulmuş.");
-                MySqlCommand selectTable = new MySqlCommand(@"SELECT * FROM person", mySqlConn);
-                MySqlDataReader myDataReader = selectTable.ExecuteReader();
-
-                while (myDataReader.Read())
-                {
-                    items.Add(new Person() {İsim = myDataReader[0].ToString(), Plaka = myDataReader[1].ToString(), Giriş = myDataReader[2].ToString()});
-                }
-
+                MessageBox.Show($"1. Kullandığınız bilgisayarın internet bağlantısını kontrol edin.\n" +
+                                $"2. Lütfen Server IP'sinin {mainTerimler.myIp} olduğundan emin olun. ('Çözüm 1 Server Bağlantı Hatası.mkv' Videosunu izleyin.)\n" +
+                                $"3. Sunucuda Wampserver programı aktif şekilde çalıştığını kontrol edin. (Çözüm 2 Server Bağlantı Hatası.mkv' Videosunu izleyin.)",
+                        "Server Bağlantı Hatası!", MessageBoxButton.OK, MessageBoxImage.Error);
+                throw;
             }
+
+            MySqlCommand selectTable = new MySqlCommand(@$"SELECT * FROM {mainTerimler.mainTable}", mySqlConn);
+            MySqlDataReader myDataReader = selectTable.ExecuteReader();
+
+            List<SevkiyatClass> items = new List<SevkiyatClass>();
+            while (myDataReader.Read())
+            {
+                string tarihString = Convert.ToDateTime(myDataReader[3]).ToString("yyyy-MM-dd");
+                DateTime tarihDateTime = Convert.ToDateTime(tarihString);
+                
+                items.Add(new SevkiyatClass() { _Firma_İsim = myDataReader[1].ToString(), _Özel_Giriş = (sbyte) myDataReader[2], 
+                                                    _Sevk_Tarih = Convert.ToDateTime(myDataReader[3]).ToString("yyyy-MM-dd"), _Mamul_Cins = myDataReader[4].ToString(),
+                                                    _Mamul_Adet = myDataReader[5].ToString(), _Plaka = myDataReader[6].ToString(),
+                                                    _Notlar = myDataReader[7].ToString(), _Araç_Sevk_Durumu = (sbyte) myDataReader[8]
+                });
+            }
+            
             MainListView.ItemsSource = items;
-            con_excel.Close();
             mySqlConn.Close();
             
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(MainListView.ItemsSource);
             view.Filter = UserFilterSearch;
         }
-        
+
         private void BtnSearch_OnClick(object sender, RoutedEventArgs e)
         {
             try
@@ -151,12 +122,20 @@ namespace DogusBlok_MiniAracTakipSistemi
             {
                 return true;
             }
-            else
-                return ((item as Person).İsim.IndexOf(txtFilter.Text, StringComparison.OrdinalIgnoreCase) >= 0) 
-                       || ((item as Person).Giriş.IndexOf(txtFilter.Text, StringComparison.OrdinalIgnoreCase) >= 0) 
-                       || ((item as Person).Plaka.IndexOf(txtFilter.Text, StringComparison.OrdinalIgnoreCase) >= 0);
+            else //Arama Kısmı Denenecek!! !!! !!! !!! !!! !!!
+                return ((item as SevkiyatClass)._Firma_İsim.IndexOf(txtFilter.Text, StringComparison.OrdinalIgnoreCase) >= 0) 
+                       || ((item as SevkiyatClass)._Özel_Giriş.ToString().IndexOf(txtFilter.Text, StringComparison.OrdinalIgnoreCase) >= 0) 
+                       || ((item as SevkiyatClass)._Sevk_Tarih.ToString().IndexOf(txtFilter.Text, StringComparison.OrdinalIgnoreCase) >= 0)
+                       || ((item as SevkiyatClass)._Mamul_Cins.IndexOf(txtFilter.Text, StringComparison.OrdinalIgnoreCase) >= 0)
+                       || ((item as SevkiyatClass)._Mamul_Adet.IndexOf(txtFilter.Text, StringComparison.OrdinalIgnoreCase) >= 0)
+                       || ((item as SevkiyatClass)._Plaka.IndexOf(txtFilter.Text, StringComparison.OrdinalIgnoreCase) >= 0)
+                       || ((item as SevkiyatClass)._Notlar.IndexOf(txtFilter.Text, StringComparison.OrdinalIgnoreCase) >= 0)
+                       || ((item as SevkiyatClass)._Araç_Sevk_Durumu.ToString().IndexOf(txtFilter.Text, StringComparison.OrdinalIgnoreCase) >= 0);
         }
 
+        
+        
+        
         private void TxtFilter_OnTextChanged(object sender, TextChangedEventArgs e)
         {
             try
@@ -167,6 +146,12 @@ namespace DogusBlok_MiniAracTakipSistemi
             {
                 Debug.WriteLine($"ERR01: Uygun Kaynak Bulunamadı!!!");
             }
+        }
+
+        private void BtnAdd_OnClick(object sender, RoutedEventArgs e)
+        {
+            AddWindow addWindow = new AddWindow();
+            addWindow.Show();
         }
     }
 }
