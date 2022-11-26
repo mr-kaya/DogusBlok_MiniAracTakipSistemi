@@ -29,28 +29,28 @@
             </Grid.ColumnDefinitions>
                 
             <TextBlock Grid.Row="0" Grid.Column="0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam"   Text="Gideceği Firma Adı : " />
-            <xctk:WatermarkTextBox Name="FirmaTextBox" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" FontSize="14" Watermark="Zorunlu Alan" />
+            <TextBox Name="FirmaTextBox" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" FontSize="14" />
             <TextBlock Grid.Row="0" Grid.Column="2" Text="*" Foreground="Red" FontSize="20" />
             <TextBlock Name="HataTutucuTextBox" Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="5" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Red" FontSize="12" FontWeight="Bold" FontFamily="Arial Rounded MT" Text=""></TextBlock>
             
             <TextBlock Grid.Row="1" Grid.Column="0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam"  Text="Satış Şekli : " />
-            <xctk:IntegerUpDown Grid.Row="1" Grid.Column="1" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Stretch" Maximum="5" Minimum="1" />
+            <xctk:IntegerUpDown Name="SatışŞekliIntegerUpDown" Grid.Row="1" Grid.Column="1" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Stretch" Maximum="5" Minimum="1" />
             
             <TextBlock Grid.Row="2" Grid.Column="0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam"  Text="Sevk Tarihi : " />
             <DatePicker Name="SevkDatePicker" Grid.Row="2" Grid.Column="1" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Stretch"></DatePicker>
             <TextBlock Grid.Row="2" Grid.Column="2" FontSize="20" Foreground="Red" Text="*" />
             
             <TextBlock Grid.Row="3" Grid.Column="0" Margin="0,0,0, 20" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam" Text="Mamulün Cinsi : " />
-            <TextBox Grid.Row="3" Grid.Column="1" Margin="0,0,0, 20" MaxHeight="120" VerticalAlignment="Top" TextAlignment="Right" HorizontalAlignment="Stretch" TextWrapping="NoWrap" AcceptsReturn="True" FontSize="14" VerticalScrollBarVisibility="Auto" />
+            <TextBox Name="MamulCinsTextBox" Grid.Row="3" Grid.Column="1" Margin="0,0,0, 20" MaxHeight="120" VerticalAlignment="Top" TextAlignment="Right" HorizontalAlignment="Stretch" TextWrapping="NoWrap" AcceptsReturn="True" FontSize="14" VerticalScrollBarVisibility="Auto" />
             
-            <TextBox Grid.Row="3" Grid.Column="3" Margin="0,0,0,20" MaxHeight="120" VerticalAlignment="Top" HorizontalAlignment="Stretch" TextWrapping="NoWrap" AcceptsReturn="True" FontSize="14" VerticalScrollBarVisibility="Auto" />
+            <TextBox Name="MamulAdetTextBox" Grid.Row="3" Grid.Column="3" Margin="0,0,0,20" MaxHeight="120" VerticalAlignment="Top" HorizontalAlignment="Stretch" TextWrapping="NoWrap" AcceptsReturn="True" FontSize="14" VerticalScrollBarVisibility="Auto" />
             <TextBlock Grid.Row="3" Grid.Column="4" Margin="0,0, 0, 20" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="14" FontFamily="Miriam" Text=" : Mamulün Adedi" />
             
             <TextBlock Grid.Row="4" Grid.Column="0" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam" Text="Plakalar : " />
-            <TextBox Grid.Row="4" Grid.Column="1" Margin="0,0,0,20" MaxHeight="64" VerticalAlignment="Top" HorizontalAlignment="Stretch" TextWrapping="Wrap" AcceptsReturn="True" FontSize="14" VerticalScrollBarVisibility="Auto" />
+            <TextBox Name="PlakaTextBox" Grid.Row="4" Grid.Column="1" Margin="0,0,0,20" MaxHeight="64" VerticalAlignment="Top" HorizontalAlignment="Stretch" TextWrapping="Wrap" AcceptsReturn="True" FontSize="14" VerticalScrollBarVisibility="Auto" />
             
             <TextBlock Grid.Row="5" Grid.Column="0" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam" Text="Notlar : " />
-            <TextBox Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" Margin="0,0,0,20" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" TextWrapping="Wrap" AcceptsReturn="True" FontSize="14" VerticalScrollBarVisibility="Auto" />
+            <TextBox Name="NotTextBox" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" Margin="0,0,0,20" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" TextWrapping="Wrap" AcceptsReturn="True" FontSize="14" VerticalScrollBarVisibility="Auto" />
             
             <TextBlock Grid.Row="6" Grid.Column="0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam" Text="Araç Sevk Durumu:" />
             <ComboBox Name="AraçSevkDurumuComboBox" Grid.Row="6" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="1">
