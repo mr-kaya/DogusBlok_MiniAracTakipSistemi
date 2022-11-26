@@ -158,11 +158,6 @@ namespace DogusBlok_MiniAracTakipSistemi
             ListeGöster();
         }
 
-        private void Buttonİptal_OnClick(object sender, RoutedEventArgs e)
-        {
-            MainPageTabItem.IsSelected = true;
-        }
-
         private void ButtonEkle_OnClick(object sender, RoutedEventArgs e)
         {
             string[] hataTutucu = new string[3];
@@ -225,6 +220,16 @@ namespace DogusBlok_MiniAracTakipSistemi
                 
                 ListeGöster();
             }
+            
+        }
+        
+        private void Buttonİptal_OnClick(object sender, RoutedEventArgs e)
+        {
+            FirmaTextBox.Text = SatışŞekliIntegerUpDown.Text = SevkDatePicker.Text = 
+                MamulCinsTextBox.Text = MamulAdetTextBox.Text = PlakaTextBox.Text =
+                    NotTextBox.Text = AraçSevkDurumuComboBox.Text = "";
+            
+            MainPageTabItem.IsSelected = true;
         }
     }
 }

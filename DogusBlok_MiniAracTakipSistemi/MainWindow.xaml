@@ -14,14 +14,13 @@ Star Fonts => David, Helvetica,
         Title="Araç Giriş Çıkış Sistemi" Icon="icons/search100.png" WindowState="Maximized">
         
         <TabControl>
-                <TabItem Name="MainPageTabItem">
+                <TabItem Name="MainPageTabItem" Visibility="Hidden">
                         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                            <Border Background="AntiqueWhite" Padding="5">
+                            <Border Background="AntiqueWhite" Padding="2">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="72" />
                                         <RowDefinition Height="720" />
-                                        <RowDefinition Height="8" />
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="36" />
@@ -112,7 +111,7 @@ Star Fonts => David, Helvetica,
                             </Border>
                         </ScrollViewer>
                 </TabItem>
-                <TabItem Name="AddPageTabItem">
+                <TabItem Name="AddPageTabItem" Visibility="Hidden">
                         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                             <Border Padding="5">
                                 <Grid>
