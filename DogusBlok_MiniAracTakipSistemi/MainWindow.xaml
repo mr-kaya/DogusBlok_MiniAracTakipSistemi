@@ -14,7 +14,7 @@ Star Fonts => David, Helvetica,
         Title="Araç Giriş Çıkış Sistemi" Icon="icons/search100.png" WindowState="Maximized">
         
         <TabControl>
-                <TabItem Name="MainPageTabItem" Visibility="Hidden">
+            <TabItem Name="MainPageTabItem" Visibility="Hidden">
                         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                             <Border Background="AntiqueWhite" Padding="2">
                                 <Grid>
@@ -23,13 +23,12 @@ Star Fonts => David, Helvetica,
                                         <RowDefinition Height="720" />
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="36" />
+                                        <ColumnDefinition Width="18" />
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="481*" />
-                                        <ColumnDefinition Width="376*" />
-                                        <ColumnDefinition Width="36" />
+                                        <ColumnDefinition Width="600" />
+                                        <ColumnDefinition Width="18" />
                                     </Grid.ColumnDefinitions>
 
                                     <Border Grid.Column="1" Grid.Row="0">
@@ -42,7 +41,7 @@ Star Fonts => David, Helvetica,
 
                                     </Border>
                                     <Border Grid.Column="2" Grid.Row="0">
-                                        <Button HorizontalAlignment="Center" VerticalAlignment="Top" Background="Transparent" BorderThickness="0" Padding="10, 0">
+                                        <Button Click="BtnDelete_OnClick" HorizontalAlignment="Center" VerticalAlignment="Top" Background="Transparent" BorderThickness="0" Padding="10, 0">
                                             <StackPanel>
                                                 <Image Source="icons/cancel100.png" Height="50" Width="50" />
                                                 <Label Padding="0" HorizontalAlignment="Center" FontWeight="SemiBold">Sil</Label>
@@ -51,133 +50,236 @@ Star Fonts => David, Helvetica,
 
                                     </Border>
                                     <Border Grid.Column="3" Grid.Row="0">
-                                        <Button Name="YenileButon" Click="ButtonYenile_OnClick" HorizontalAlignment="Center" VerticalAlignment="Top" Background="Transparent" BorderThickness="0" Padding="10, 0">
+                                        <Button Click="ButtonYenile_OnClick" HorizontalAlignment="Center" VerticalAlignment="Top" Background="Transparent" BorderThickness="0" Padding="10, 0">
                                             <StackPanel>
                                                 <Image Source="icons/undo100.png" Height="50" Width="50" />
                                                 <Label Padding="0" HorizontalAlignment="Center" FontWeight="SemiBold">Yenile</Label>
                                             </StackPanel>
                                         </Button>
-
                                     </Border>
-                                    <Border Grid.Column="4" Grid.Row="0">
-                                        <TextBox Name="txtFilter" TextChanged="TxtFilter_OnTextChanged" VerticalAlignment="Center" HorizontalAlignment="Right" Width="175" FontSize="20"></TextBox>
-                                    </Border>
-                                    <Border Grid.Column="5" Grid.Row="0">
-                                        <Button Click="BtnSearch_OnClick"
-                                                            HorizontalAlignment="Left" VerticalAlignment="Top" Background="Transparent" BorderThickness="0" Padding="10, 0">
-                                            <StackPanel>
-                                                <Image Source="icons/search100.png" Height="50" Width="50" />
-                                                <Label Padding="0" HorizontalAlignment="Center" FontWeight="SemiBold">Ara</Label>
+                                    <Border Grid.Column="4" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <DockPanel>
+                                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                                <TextBlock Text="Başlangıç T:" Margin="0,0,2,9" FontWeight="DemiBold" TextAlignment="Right"></TextBlock>
+                                                <TextBlock Text="Bitiş T:" Margin="0,9,2,0" FontWeight="DemiBold" TextAlignment="Right"></TextBlock>
                                             </StackPanel>
-                                        </Button>
+                                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,40,0">
+                                                <DatePicker SelectedDateChanged="Date_OnSelectedDateChanged" Name="BaşlangıçDatePicker" Width="100" Margin="0,0,0,5"></DatePicker>
+                                                <DatePicker SelectedDateChanged="Date_OnSelectedDateChanged" Name="BitişDatePicker" Width="100" Margin="0,5,0,0"></DatePicker>
+                                            </StackPanel>
+                                            <TextBox Name="txtFilter" TextChanged="TxtFilter_OnTextChanged" VerticalAlignment="Center" HorizontalAlignment="Right" Width="175" FontSize="20"></TextBox>    
+                                            <Button Click="BtnSearch_OnClick"
+                                                    HorizontalAlignment="Left" VerticalAlignment="Top" Background="Transparent" BorderThickness="0" Padding="10, 0">
+                                                <StackPanel>
+                                                    <Image Source="icons/search100.png" Height="50" Width="50" />
+                                                    <Label Padding="0" HorizontalAlignment="Center" FontWeight="SemiBold">Ara</Label>
+                                                </StackPanel>
+                                            </Button>
+                                        </DockPanel>
                                     </Border>
-                                    <Border Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="5">
-                                        <ListView HorizontalAlignment="Center" VerticalAlignment="Top" Margin="20"  MinWidth="400" Background="FloralWhite" 
-                                                              FontSize="14" FontWeight="Normal" FontFamily="Uni Sans"
-                                                              Name="MainListView">
-                                            <ListView.Resources>
-                                                <Style TargetType="{x:Type ListViewItem}">
-                                                    <Setter Property="Height" Value="30" />
+                                    <Border Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="4">
+                                        <DataGrid  ItemsSource="{Binding Path=DataGridData}" SelectedItem="{Binding Path=SelectedData, Mode=TwoWay}"
+                                                   HeadersVisibility="Column"  HorizontalGridLinesBrush="White" VerticalGridLinesBrush="White" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="20"  MinWidth="400" Background="FloralWhite" 
+                                                   FontSize="14" FontWeight="Normal" FontFamily="Uni Sans" RowBackground="#B8CCE4" AlternatingRowBackground="#DBE5F1"
+                                                   Name="MainListView" IsReadOnly="True" AutoGenerateColumns="False">
+                                            <DataGrid.Resources>
+                                                <Style TargetType="DataGridRow">
+                                                    <EventSetter Event="MouseDoubleClick" Handler="DataGridRow_DoubleClick" />
+                                                </Style>
+                                                <Style TargetType="{x:Type DataGridColumnHeader}">
+                                                    <Setter Property="SnapsToDevicePixels" Value="True" />
+                                                    <Setter Property="Cursor" Value="Hand" />
+                                                    <Setter Property="BorderBrush" Value="White" />
+                                                    <Setter Property="BorderThickness" Value="1" />
+                                                    <Setter Property="Padding" Value="8" />
+                                                    <Setter Property="Background" Value="#4F81BD" />
+                                                    <Setter Property="Foreground" Value="White" />
                                                     <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                                    <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                                                </Style>
+                                                <Style TargetType="DataGridCell">
+                                                    <Setter Property="Padding" Value="8" />
+                                                    <Setter Property="HorizontalAlignment" Value="Stretch" />
+                                                    <Setter Property="FontWeight" Value="DemiBold" />
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="{x:Type DataGridCell}">
+                                                                <Border Padding="{TemplateBinding Padding}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                                                                    <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                                                </Border>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding _Araç_Sevk_Durumu}" Value="Yükleniyor">
-                                                            <Setter Property="Background" Value="Coral" />
-                                                            <Setter Property="FontWeight" Value="Bold" />
+                                                            <Setter Property="Background" Value="Chocolate" />
+                                                            <Setter Property="FontWeight" Value="Normal" />
                                                             <Setter Property="Foreground" Value="White" />
                                                         </DataTrigger>
                                                         <DataTrigger Binding="{Binding _Araç_Sevk_Durumu}" Value="Çıktı">
-                                                            <Setter Property="Background" Value="GreenYellow" />
-                                                            <Setter Property="FontWeight" Value="Bold" />
+                                                            <Setter Property="Background" Value="DarkGreen" />
+                                                            <Setter Property="FontWeight" Value="Normal" />
                                                             <Setter Property="Foreground" Value="White" />
                                                         </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
-                                            </ListView.Resources>
-                                            <ListView.View>
-                                                <GridView>
-                                                    <GridViewColumn Header="İsim" DisplayMemberBinding="{Binding _Firma_İsim}" Width="250" />
-                                                    <GridViewColumn Header="Satış Şekli" DisplayMemberBinding="{Binding _Satış_Şekli}" Width="75" />
-                                                    <GridViewColumn Header="Sevk Tarihi" DisplayMemberBinding="{Binding _Sevk_Tarih}" Width="125" />
-                                                    <GridViewColumn Header="Mamul Cinsi" DisplayMemberBinding="{Binding _Mamul_Cins}" Width="125" />
-                                                    <GridViewColumn Header="Mamul Adedi" DisplayMemberBinding="{Binding _Mamul_Adet}" Width="125" />
-                                                    <GridViewColumn Header="Plakalar" DisplayMemberBinding="{Binding _Plaka}" Width="125" />
-                                                    <GridViewColumn Header="Notlar" DisplayMemberBinding="{Binding _Notlar}" Width="400" />
-                                                    <GridViewColumn Header="Sevk Durumu" DisplayMemberBinding="{Binding _Araç_Sevk_Durumu}" Width="100" />
-                                                </GridView>
-                                            </ListView.View>
-                                        </ListView>
+                                            </DataGrid.Resources>
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Header="#" Binding="{Binding _Sıra}" Width="50" />
+                                                <DataGridTextColumn Header="Firma" Binding="{Binding _Firma_İsim}" Width="250" />
+                                                <DataGridTextColumn Header="Satış Şekli" Binding="{Binding _Satış_Şekli}" Width="100" />
+                                                <DataGridTextColumn Header="Sevk Tarihi" Binding="{Binding _Sevk_Tarih}" Width="125" />
+                                                <DataGridTextColumn Header="Mamul Cinsi" Binding="{Binding _Mamul_Cins}" Width="125" />
+                                                <DataGridTextColumn Header="Mamul Adedi" Binding="{Binding _Mamul_Adet}" Width="125" />
+                                                <DataGridTextColumn Header="Plakalar" Binding="{Binding _Plaka}" Width="110" />
+                                                <DataGridTextColumn Header="Notlar" Binding="{Binding _Notlar}" Width="400" FontSize="12" FontWeight="Normal" />
+                                                <DataGridTextColumn Header="Sevk Durumu" Binding="{Binding _Araç_Sevk_Durumu}" Width="100" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>
                                     </Border>
                                 </Grid>
                             </Border>
                         </ScrollViewer>
                 </TabItem>
-                <TabItem Name="AddPageTabItem" Visibility="Hidden">
-                        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                            <Border Padding="5">
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="48" />
-                                        <RowDefinition Height="48" />
-                                        <RowDefinition Height="48" />
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="60" />
-                                        <RowDefinition Height="48" />
-                                        <RowDefinition Height="50" />
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="144" />
-                                        <ColumnDefinition Width="144" />
-                                        <ColumnDefinition Width="18" />
-                                        <ColumnDefinition Width="144" />
-                                        <ColumnDefinition Width="144" />
-                                    </Grid.ColumnDefinitions>
-                                        
-                                    <TextBlock Grid.Row="0" Grid.Column="0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam"   Text="Gideceği Firma Adı : " />
-                                    <TextBox Name="FirmaTextBox" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" FontSize="14" />
-                                    <TextBlock Grid.Row="0" Grid.Column="2" Text="*" Foreground="Red" FontSize="20" />
-                                    <TextBlock Name="HataTutucuTextBox" Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="5" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Red" FontSize="12" FontWeight="Bold" FontFamily="Arial Rounded MT" Text=""></TextBlock>
+            <TabItem Name="AddPageTabItem" Visibility="Hidden">
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                        <Border Padding="5" Background="AntiqueWhite">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="96" />
+                                    <RowDefinition Height="48" />
+                                    <RowDefinition Height="48" />
+                                    <RowDefinition Height="48" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="60" />
+                                    <RowDefinition Height="48" />
+                                    <RowDefinition Height="50" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="96" />
+                                    <ColumnDefinition Width="144" />
+                                    <ColumnDefinition Width="144" />
+                                    <ColumnDefinition Width="18" />
+                                    <ColumnDefinition Width="144" />
+                                    <ColumnDefinition Width="144" />
+                                </Grid.ColumnDefinitions>
                                     
-                                    <TextBlock Grid.Row="1" Grid.Column="0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam"  Text="Satış Şekli : " />
-                                    <xctk:IntegerUpDown Name="SatışŞekliIntegerUpDown" Grid.Row="1" Grid.Column="1" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Stretch" Maximum="5" Minimum="1" />
-                                    
-                                    <TextBlock Grid.Row="2" Grid.Column="0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam"  Text="Sevk Tarihi : " />
-                                    <DatePicker Name="SevkDatePicker" Grid.Row="2" Grid.Column="1" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Stretch"></DatePicker>
-                                    <TextBlock Grid.Row="2" Grid.Column="2" FontSize="20" Foreground="Red" Text="*" />
-                                    
-                                    <TextBlock Grid.Row="3" Grid.Column="0" Margin="0,0,0, 20" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam" Text="Mamulün Cinsi : " />
-                                    <TextBox Name="MamulCinsTextBox" Grid.Row="3" Grid.Column="1" Margin="0,0,0, 20" MaxHeight="120" VerticalAlignment="Top" TextAlignment="Right" HorizontalAlignment="Stretch" TextWrapping="NoWrap" AcceptsReturn="True" FontSize="14" VerticalScrollBarVisibility="Auto" />
-                                    
-                                    <TextBox Name="MamulAdetTextBox" Grid.Row="3" Grid.Column="3" Margin="0,0,0,20" MaxHeight="120" VerticalAlignment="Top" HorizontalAlignment="Stretch" TextWrapping="NoWrap" AcceptsReturn="True" FontSize="14" VerticalScrollBarVisibility="Auto" />
-                                    <TextBlock Grid.Row="3" Grid.Column="4" Margin="0,0, 0, 20" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="14" FontFamily="Miriam" Text=" : Mamulün Adedi" />
-                                    
-                                    <TextBlock Grid.Row="4" Grid.Column="0" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam" Text="Plakalar : " />
-                                    <TextBox Name="PlakaTextBox" Grid.Row="4" Grid.Column="1" Margin="0,0,0,20" MaxHeight="64" VerticalAlignment="Top" HorizontalAlignment="Stretch" TextWrapping="Wrap" AcceptsReturn="True" FontSize="14" VerticalScrollBarVisibility="Auto" />
-                                    
-                                    <TextBlock Grid.Row="5" Grid.Column="0" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam" Text="Notlar : " />
-                                    <TextBox Name="NotTextBox" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" Margin="0,0,0,20" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" TextWrapping="Wrap" AcceptsReturn="True" FontSize="14" VerticalScrollBarVisibility="Auto" />
-                                    
-                                    <TextBlock Grid.Row="6" Grid.Column="0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam" Text="Araç Sevk Durumu:" />
-                                    <ComboBox Name="AraçSevkDurumuComboBox" Grid.Row="6" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="1">
-                                        <ComboBoxItem Content="Yükleniyor"></ComboBoxItem>
-                                        <ComboBoxItem Content="Çıktı"></ComboBoxItem>
-                                        <ComboBoxItem Content=""></ComboBoxItem>
-                                    </ComboBox>
-                                    
-                                    
-                                    <Button Click="ButtonEkle_OnClick" Grid.Row="8" Grid.Column="1" Style="{StaticResource RoundedButtonOk}">
-                                        <DockPanel>
-                                            <TextBlock FontSize="20" FontWeight="DemiBold" FontFamily="Arial Rounded MT" Text="Ekle"></TextBlock>
-                                        </DockPanel>
-                                    </Button>
-                                    <Button Click="Buttonİptal_OnClick" Grid.Row="8" Grid.Column="3" Style="{StaticResource RoundedButtonClose}">
-                                        <DockPanel>
-                                            <TextBlock FontSize="20" FontWeight="DemiBold" FontFamily="Arial Rounded MT" Text="İptal Et"></TextBlock>
-                                        </DockPanel>
-                                    </Button>
-                                </Grid>
-                            </Border>
-                        </ScrollViewer>
-                </TabItem>
+                                <TextBlock Grid.Row="1" Grid.Column="1" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam"   Text="Gideceği Firma Adı : " />
+                                <TextBox Name="FirmaTextBox" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Stretch" FontSize="14" />
+                                <TextBlock Grid.Row="1" Grid.Column="3" Text="*" Foreground="Red" FontSize="20" />
+                                <TextBlock Name="HataTutucuTextBox" Grid.Row="1" Grid.Column="4" Grid.ColumnSpan="5" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Red" FontSize="12" FontWeight="Bold" FontFamily="Arial Rounded MT" Text=""></TextBlock>
+                                
+                                <TextBlock Grid.Row="2" Grid.Column="1" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam"  Text="Satış Şekli : " />
+                                <xctk:IntegerUpDown Name="SatışŞekliIntegerUpDown" Grid.Row="2" Grid.Column="2" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Stretch" Maximum="5" Minimum="1" />
+                                
+                                <TextBlock Grid.Row="3" Grid.Column="1" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam"  Text="Sevk Tarihi : " />
+                                <DatePicker Name="SevkDatePicker" Grid.Row="3" Grid.Column="2" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Stretch"></DatePicker>
+                                <TextBlock Grid.Row="3" Grid.Column="3" FontSize="20" Foreground="Red" Text="*" />
+                                
+                                <TextBlock Grid.Row="4" Grid.Column="1" Margin="0,0,0, 20" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam" Text="Mamulün Cinsi : " />
+                                <TextBox Name="MamulCinsTextBox" Grid.Row="4" Grid.Column="2" Margin="0,0,0, 20" MaxHeight="120" VerticalAlignment="Top" TextAlignment="Right" HorizontalAlignment="Stretch" TextWrapping="NoWrap" AcceptsReturn="True" FontSize="14" VerticalScrollBarVisibility="Auto" />
+                                
+                                <TextBox Name="MamulAdetTextBox" Grid.Row="4" Grid.Column="4" Margin="0,0,0,20" MaxHeight="120" VerticalAlignment="Top" HorizontalAlignment="Stretch" TextWrapping="NoWrap" AcceptsReturn="True" FontSize="14" VerticalScrollBarVisibility="Auto" />
+                                <TextBlock Grid.Row="4" Grid.Column="5" Margin="0,0, 0, 20" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="14" FontFamily="Miriam" Text=" : Mamulün Adedi" />
+                                
+                                <TextBlock Grid.Row="5" Grid.Column="1" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam" Text="Plakalar : " />
+                                <TextBox Name="PlakaTextBox" Grid.Row="5" Grid.Column="2" Margin="0,0,0,20" MaxHeight="64" VerticalAlignment="Top" HorizontalAlignment="Stretch" TextWrapping="Wrap" AcceptsReturn="True" FontSize="14" VerticalScrollBarVisibility="Auto" />
+                                
+                                <TextBlock Grid.Row="6" Grid.Column="1" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam" Text="Notlar : " />
+                                <TextBox Name="NotTextBox" Grid.Row="6" Grid.Column="2" Grid.ColumnSpan="3" Margin="0,0,0,20" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" TextWrapping="Wrap" AcceptsReturn="True" FontSize="14" VerticalScrollBarVisibility="Auto" />
+                                
+                                <TextBlock Grid.Row="7" Grid.Column="1" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam" Text="Araç Sevk Durumu :" />
+                                <ComboBox Name="AraçSevkDurumuComboBox" Grid.Row="7" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="2">
+                                    <ComboBoxItem Content="Yükleniyor"></ComboBoxItem>
+                                    <ComboBoxItem Content="Çıktı"></ComboBoxItem>
+                                    <ComboBoxItem Content=""></ComboBoxItem>
+                                </ComboBox>
+                                
+                                
+                                <Button Click="ButtonEkle_OnClick" Grid.Row="9" Grid.Column="2" Style="{StaticResource RoundedButtonOk}">
+                                    <DockPanel>
+                                        <TextBlock FontSize="20" FontWeight="DemiBold" FontFamily="Arial Rounded MT" Text="Ekle"></TextBlock>
+                                    </DockPanel>
+                                </Button>
+                                <Button Click="Buttonİptal_OnClick" Grid.Row="9" Grid.Column="4" Style="{StaticResource RoundedButtonClose}">
+                                    <DockPanel>
+                                        <TextBlock FontSize="20" FontWeight="DemiBold" FontFamily="Arial Rounded MT" Text="İptal Et"></TextBlock>
+                                    </DockPanel>
+                                </Button>
+                            </Grid>
+                        </Border>
+                    </ScrollViewer>
+            </TabItem>
+            <TabItem Name="UpdateTabItem" Visibility="Hidden">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                    <Border Padding="5" Background="AntiqueWhite">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="96" />
+                                <RowDefinition Height="48" />
+                                <RowDefinition Height="48" />
+                                <RowDefinition Height="48" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="60" />
+                                <RowDefinition Height="48" />
+                                <RowDefinition Height="50" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="96" />
+                                <ColumnDefinition Width="144" />
+                                <ColumnDefinition Width="144" />
+                                <ColumnDefinition Width="18" />
+                                <ColumnDefinition Width="144" />
+                                <ColumnDefinition Width="144" />
+                            </Grid.ColumnDefinitions>
+                                
+                            <TextBlock Grid.Row="1" Grid.Column="1" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam"   Text="Gideceği Firma Adı : " />
+                            <TextBox Name="FirmaTextBoxUpdate" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Stretch" FontSize="14" />
+                            <TextBlock Grid.Row="1" Grid.Column="3" Text="*" Foreground="Red" FontSize="20" />
+                            <TextBlock Name="HataTutucuTextBoxUpdate" Grid.Row="1" Grid.Column="4" Grid.ColumnSpan="5" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Red" FontSize="12" FontWeight="Bold" FontFamily="Arial Rounded MT" Text=""></TextBlock>
+                            
+                            <TextBlock Grid.Row="2" Grid.Column="1" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam"  Text="Satış Şekli : " />
+                            <xctk:IntegerUpDown Name="SatışŞekliIntegerUpDownUpdate" Grid.Row="2" Grid.Column="2" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Stretch" Maximum="5" Minimum="1" />
+                            
+                            <TextBlock Grid.Row="3" Grid.Column="1" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam"  Text="Sevk Tarihi : " />
+                            <DatePicker Name="SevkDatePickerUpdate" Grid.Row="3" Grid.Column="2" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Stretch"></DatePicker>
+                            <TextBlock Grid.Row="3" Grid.Column="3" FontSize="20" Foreground="Red" Text="*" />
+                            
+                            <TextBlock Grid.Row="4" Grid.Column="1" Margin="0,0,0, 20" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam" Text="Mamulün Cinsi : " />
+                            <TextBox Name="MamulCinsTextBoxUpdate" Grid.Row="4" Grid.Column="2" Margin="0,0,0, 20" MaxHeight="120" VerticalAlignment="Top" TextAlignment="Right" HorizontalAlignment="Stretch" TextWrapping="NoWrap" AcceptsReturn="True" FontSize="14" VerticalScrollBarVisibility="Auto" />
+                            
+                            <TextBox Name="MamulAdetTextBoxUpdate" Grid.Row="4" Grid.Column="4" Margin="0,0,0,20" MaxHeight="120" VerticalAlignment="Top" HorizontalAlignment="Stretch" TextWrapping="NoWrap" AcceptsReturn="True" FontSize="14" VerticalScrollBarVisibility="Auto" />
+                            <TextBlock Grid.Row="4" Grid.Column="5" Margin="0,0, 0, 20" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="14" FontFamily="Miriam" Text=" : Mamulün Adedi" />
+                            
+                            <TextBlock Grid.Row="5" Grid.Column="1" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam" Text="Plakalar : " />
+                            <TextBox Name="PlakaTextBoxUpdate" Grid.Row="5" Grid.Column="2" Margin="0,0,0,20" MaxHeight="64" VerticalAlignment="Top" HorizontalAlignment="Stretch" TextWrapping="Wrap" AcceptsReturn="True" FontSize="14" VerticalScrollBarVisibility="Auto" />
+                            
+                            <TextBlock Grid.Row="6" Grid.Column="1" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam" Text="Notlar : " />
+                            <TextBox Name="NotTextBoxUpdate" Grid.Row="6" Grid.Column="2" Grid.ColumnSpan="3" Margin="0,0,0,20" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" TextWrapping="Wrap" AcceptsReturn="True" FontSize="14" VerticalScrollBarVisibility="Auto" />
+                            
+                            <TextBlock Grid.Row="7" Grid.Column="1" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam" Text="Araç Sevk Durumu :" />
+                            <ComboBox Name="AraçSevkDurumuComboBoxUpdate" Grid.Row="7" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="2">
+                                <ComboBoxItem Content="Yükleniyor"></ComboBoxItem>
+                                <ComboBoxItem Content="Çıktı"></ComboBoxItem>
+                                <ComboBoxItem Content=""></ComboBoxItem>
+                            </ComboBox>
+                            
+                            
+                            <Button Click="ButtonGüncelle_OnClick" Grid.Row="9" Grid.Column="2" Style="{StaticResource RoundedButtonUpdate}">
+                                <DockPanel>
+                                    <TextBlock FontSize="20" FontWeight="DemiBold" FontFamily="Arial Rounded MT" Text="Güncelle"></TextBlock>
+                                </DockPanel>
+                            </Button>
+                            <Button Click="Buttonİptal_OnClick" Grid.Row="9" Grid.Column="4" Style="{StaticResource RoundedButtonClose}">
+                                <DockPanel>
+                                    <TextBlock FontSize="20" FontWeight="DemiBold" FontFamily="Arial Rounded MT" Text="İptal Et"></TextBlock>
+                                </DockPanel>
+                            </Button>
+                        </Grid>
+                    </Border>
+                </ScrollViewer>
+            </TabItem>
         </TabControl>
 </Window>
