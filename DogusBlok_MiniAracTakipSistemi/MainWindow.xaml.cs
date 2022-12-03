@@ -10,8 +10,11 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Data.Common;
 using MySql.Data.MySqlClient;
+
 using System.Data.OleDb;
+using System.Globalization;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
@@ -23,6 +26,7 @@ using System.Windows.Shapes;
 using Google.Protobuf.WellKnownTypes;
 using Color = System.Drawing.Color;
 using Path = System.IO.Path;
+using Type = System.Type;
 
 namespace DogusBlok_MiniAracTakipSistemi
 {
@@ -64,6 +68,7 @@ namespace DogusBlok_MiniAracTakipSistemi
             GenelTerimler.userName = "root2";
             GenelTerimler.mainTable = "sevkiyatDeneme";
             GenelTerimler.charset = "utf8";
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("tr-TR");
 
             BaşlangıçDatePicker.SelectedDate = DateTime.Now;
             BitişDatePicker.SelectedDate = DateTime.Now;
@@ -85,14 +90,15 @@ namespace DogusBlok_MiniAracTakipSistemi
 
         private bool UserFilterSearch(object item)
         {
-                //Arama Kısmı Denenecek!! !!! !!! !!! !!! !!!
-                return ((item as SevkiyatClass)._Firma_İsim.IndexOf(txtFilter.Text, StringComparison.OrdinalIgnoreCase) >= 0) 
-                       || ((item as SevkiyatClass)._Satış_Şekli.IndexOf(txtFilter.Text, StringComparison.OrdinalIgnoreCase) >= 0) 
-                       || ((item as SevkiyatClass)._Sevk_Tarih.IndexOf(txtFilter.Text, StringComparison.OrdinalIgnoreCase) >= 0)
-                       || ((item as SevkiyatClass)._Mamul_Cins.IndexOf(txtFilter.Text, StringComparison.OrdinalIgnoreCase) >= 0)
-                       || ((item as SevkiyatClass)._Plaka.IndexOf(txtFilter.Text, StringComparison.OrdinalIgnoreCase) >= 0)
-                       || ((item as SevkiyatClass)._Notlar.IndexOf(txtFilter.Text, StringComparison.OrdinalIgnoreCase) >= 0)
-                       || ((item as SevkiyatClass)._Araç_Sevk_Durumu.IndexOf(txtFilter.Text, StringComparison.OrdinalIgnoreCase) >= 0);
+            //Arama Kısmı Denenecek!! !!! !!! !!! !!! !!!
+                return ((item as SevkiyatClass)._Firma_İsim.IndexOf(txtFilter.Text, StringComparison.CurrentCultureIgnoreCase) >= 0) 
+                       || ((item as SevkiyatClass)._Satış_Şekli.IndexOf(txtFilter.Text, StringComparison.CurrentCultureIgnoreCase) >= 0) 
+                       || ((item as SevkiyatClass)._Sevk_Tarih.IndexOf(txtFilter.Text, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                       || ((item as SevkiyatClass)._Mamul_Cins.IndexOf(txtFilter.Text, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                       || ((item as SevkiyatClass)._Mamul_Adet.IndexOf(txtFilter.Text, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                       || ((item as SevkiyatClass)._Plaka.IndexOf(txtFilter.Text, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                       || ((item as SevkiyatClass)._Notlar.IndexOf(txtFilter.Text, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                       || ((item as SevkiyatClass)._Araç_Sevk_Durumu.IndexOf(txtFilter.Text, StringComparison.CurrentCultureIgnoreCase) >= 0);
         }
 
         
@@ -438,6 +444,19 @@ namespace DogusBlok_MiniAracTakipSistemi
                 ListeGöster();
             }
 
+        }
+
+        
+        
+        private void BtnExcelCikti_OnButtonClick(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+
+        private void BtnPrint_OnClick(object sender, RoutedEventArgs e)
+        {
+            
         }
     }
 }

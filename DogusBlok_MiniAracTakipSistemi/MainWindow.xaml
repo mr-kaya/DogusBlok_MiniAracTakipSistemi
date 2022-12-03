@@ -27,8 +27,8 @@ Star Fonts => David, Helvetica,
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="600" />
-                                        <ColumnDefinition Width="18" />
+                                        <ColumnDefinition Width="900" />
+                                        <ColumnDefinition Width="9" />
                                     </Grid.ColumnDefinitions>
 
                                     <Border Grid.Column="1" Grid.Row="0">
@@ -73,6 +73,20 @@ Star Fonts => David, Helvetica,
                                                 <StackPanel>
                                                     <Image Source="icons/search100.png" Height="50" Width="50" />
                                                     <Label Padding="0" HorizontalAlignment="Center" FontWeight="SemiBold">Ara</Label>
+                                                </StackPanel>
+                                            </Button>
+                                            <Button Click="BtnExcelCikti_OnButtonClick"
+                                                Margin="250,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Background="Transparent" BorderThickness="0" Padding="10, 0">
+                                                <StackPanel>
+                                                    <Image Source="icons/excel-100.png" Height="50" Width="50" />
+                                                    <Label Padding="0" HorizontalAlignment="Center" FontWeight="SemiBold">Excel Oluştur</Label>
+                                                </StackPanel>
+                                            </Button>
+                                            <Button Click="BtnPrint_OnClick"
+                                                HorizontalAlignment="Left" VerticalAlignment="Top" Background="Transparent" BorderThickness="0" Padding="10, 0">
+                                                <StackPanel>
+                                                    <Image Source="icons/printer-100.png" Height="50" Width="50" />
+                                                    <Label Padding="0" HorizontalAlignment="Center" FontWeight="SemiBold">Yazdır</Label>
                                                 </StackPanel>
                                             </Button>
                                         </DockPanel>

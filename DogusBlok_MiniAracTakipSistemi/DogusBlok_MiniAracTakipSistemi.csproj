@@ -30,10 +30,19 @@
       <Content Include="icons\search100.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
+      <None Remove="icons\printer-100.png" />
+      <Content Include="icons\printer-100.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="icons\excel-100.png" />
+      <Content Include="icons\excel-100.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="Extended.Wpf.Toolkit" Version="4.4.0" />
+      <PackageReference Include="Microsoft.Office.Interop.Excel" Version="15.0.4795.1001" />
       <PackageReference Include="MySql.Data" Version="8.0.31" />
       <PackageReference Include="System.Data.OleDb" Version="7.0.0" />
     </ItemGroup>
