@@ -10,8 +10,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Data.Common;
 using MySql.Data.MySqlClient;
-
-using System.Data.OleDb;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -23,10 +21,13 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ClosedXML.Excel;
 using Google.Protobuf.WellKnownTypes;
+using Microsoft.Win32;
 using Color = System.Drawing.Color;
 using Path = System.IO.Path;
 using Type = System.Type;
+using Window = System.Windows.Window;
 
 namespace DogusBlok_MiniAracTakipSistemi
 {
@@ -51,13 +52,15 @@ namespace DogusBlok_MiniAracTakipSistemi
         public static string? mainTable { get; set; }
         public static string? charset { get; set; }
     }
-    
+
     public partial class MainWindow : Window
     {
+        private static List<SevkiyatClass> items;
+        
         public MainWindow()
         {
             InitializeComponent();
-            
+
             ImportDatabaseToGridView();
         }
 
@@ -120,7 +123,7 @@ namespace DogusBlok_MiniAracTakipSistemi
         {
             String mySqlConnectionString = $"server={GenelTerimler.myIp};port=3306;uid={GenelTerimler.userName};database={GenelTerimler.databaseName};charset={GenelTerimler.charset};";
             MySqlConnection mySqlConn = new MySqlConnection(mySqlConnectionString);
-            List<SevkiyatClass> items = new List<SevkiyatClass>();
+            items = new List<SevkiyatClass>();
 
             try
             {
@@ -141,11 +144,11 @@ namespace DogusBlok_MiniAracTakipSistemi
                 {
                     BitişDatePicker.Text = BaşlangıçDatePicker.Text;
                 }
-                
+            
                 MySqlCommand selectTable = new MySqlCommand(@$"SELECT * FROM {GenelTerimler.mainTable} WHERE 
                 Sevk_Tarih>='{Convert.ToDateTime(BaşlangıçDatePicker.Text).ToString("yyyy-MM-dd")}' AND Sevk_Tarih<='{Convert.ToDateTime(BitişDatePicker.Text).ToString("yyyy-MM-dd")}'", mySqlConn);
                 MySqlDataReader myDataReader = selectTable.ExecuteReader();
-                
+            
                 int i = 1;
                 while ( myDataReader.Read())
                 {
@@ -155,9 +158,10 @@ namespace DogusBlok_MiniAracTakipSistemi
                         _Mamul_Adet = myDataReader[4].ToString(), _Plaka = myDataReader[5].ToString(),
                         _Notlar = myDataReader[6].ToString(), _Araç_Sevk_Durumu = myDataReader[7].ToString()
                     });
+
                     i++;
                 }
-            
+                
                 MainListView.ItemsSource = items;
                 mySqlConn.Close();
 
@@ -166,8 +170,9 @@ namespace DogusBlok_MiniAracTakipSistemi
             }
             catch (Exception e)
             {
-                
+
             }
+            
         }
         
         private void BtnAdd_OnClick(object sender, RoutedEventArgs e)
@@ -296,11 +301,13 @@ namespace DogusBlok_MiniAracTakipSistemi
                 }
 
                 string firmaİsim = new string(firmaİsimChar.ToArray());
+                firmaİsim = firmaİsim.Replace("'","\"");
 
                 string plakaNumarası = PlakaTextBoxUpdate.Text;
                 if (!String.IsNullOrEmpty(PlakaTextBoxUpdate.Text))
                 {
-                    plakaNumarası = PlakaTextBoxUpdate.Text.Replace(" ", "").ToUpper();
+                    plakaNumarası = plakaNumarası.Replace("'","");
+                    plakaNumarası = plakaNumarası.Replace(" ", "").ToUpper();
                 }
 
                 try
@@ -319,8 +326,8 @@ namespace DogusBlok_MiniAracTakipSistemi
                 SevkiyatClass rowSevkiyat = MainListView.SelectedItem as SevkiyatClass;
                 MySqlCommand updateCommand = new MySqlCommand($@"UPDATE {GenelTerimler.mainTable} SET 
                            Firma='{firmaİsim}', Satis_Sekli='{SatışŞekliIntegerUpDownUpdate.Text}', Sevk_Tarih='{Convert.ToDateTime(SevkDatePickerUpdate.Text).ToString("yyyy-MM-dd")}', 
-                           Mamul_Cins='{MamulCinsTextBoxUpdate.Text}', Mamul_Aded='{MamulAdetTextBoxUpdate.Text}', Plaka='{plakaNumarası}',
-                           Notlar='{NotTextBoxUpdate.Text}', Arac_Sevk_Durumu='{AraçSevkDurumuComboBoxUpdate.Text}' 
+                           Mamul_Cins='{MamulCinsTextBoxUpdate.Text.Replace("'","\"")}', Mamul_Aded='{MamulAdetTextBoxUpdate.Text.Replace("'","\"")}', Plaka='{plakaNumarası}',
+                           Notlar='{NotTextBoxUpdate.Text.Replace("'","\"")}', Arac_Sevk_Durumu='{AraçSevkDurumuComboBoxUpdate.Text}' 
                            WHERE 
                                 Firma='{rowSevkiyat._Firma_İsim}' AND Satis_Sekli='{rowSevkiyat._Satış_Şekli}' AND Sevk_Tarih='{Convert.ToDateTime(rowSevkiyat._Sevk_Tarih).ToString("yyyy-MM-dd")}' AND 
                                 Mamul_Cins='{rowSevkiyat._Mamul_Cins}' AND Mamul_Aded='{rowSevkiyat._Mamul_Adet}' AND Plaka='{rowSevkiyat._Plaka}' AND
@@ -393,11 +400,13 @@ namespace DogusBlok_MiniAracTakipSistemi
                 }
 
                 string firmaİsim = new string(firmaİsimChar.ToArray());
+                firmaİsim = firmaİsim.Replace("'","\"");
                 
                 string plakaNumarası = PlakaTextBox.Text;
                 if (!String.IsNullOrEmpty(PlakaTextBox.Text))
                 {
-                    plakaNumarası = PlakaTextBox.Text.Replace(" ", "").ToUpper();
+                    plakaNumarası = plakaNumarası.Replace("'","");
+                    plakaNumarası = plakaNumarası.Replace(" ", "").ToUpper();
                 }
 
                 try
@@ -413,7 +422,7 @@ namespace DogusBlok_MiniAracTakipSistemi
                     throw;
                 }
                 
-                MySqlCommand sqlAddCommand = new MySqlCommand($@"INSERT INTO {GenelTerimler.mainTable} (Firma, Satis_Sekli, Sevk_Tarih, Mamul_Cins, Mamul_Aded, Plaka, Notlar, Arac_Sevk_Durumu) VALUES ('{firmaİsim}', '{SatışŞekliIntegerUpDown.Text}', '{Convert.ToDateTime(SevkDatePicker.Text).ToString("yyyy-MM-dd")}', '{MamulCinsTextBox.Text}', '{MamulAdetTextBox.Text}', '{plakaNumarası}', '{NotTextBox.Text}', '{AraçSevkDurumuComboBox.Text}')", mySqlConn);
+                MySqlCommand sqlAddCommand = new MySqlCommand($@"INSERT INTO {GenelTerimler.mainTable} (Firma, Satis_Sekli, Sevk_Tarih, Mamul_Cins, Mamul_Aded, Plaka, Notlar, Arac_Sevk_Durumu) VALUES ('{firmaİsim}', '{SatışŞekliIntegerUpDown.Text}', '{Convert.ToDateTime(SevkDatePicker.Text).ToString("yyyy-MM-dd")}', '{MamulCinsTextBox.Text.Replace("'","\"")}', '{MamulAdetTextBox.Text.Replace("'","\"")}', '{plakaNumarası}', '{NotTextBox.Text.Replace("'","\"")}', '{AraçSevkDurumuComboBox.Text}')", mySqlConn);
                 sqlAddCommand.ExecuteNonQuery();
                 mySqlConn.Close();
 
@@ -448,9 +457,51 @@ namespace DogusBlok_MiniAracTakipSistemi
 
         
         
-        private void BtnExcelCikti_OnButtonClick(object sender, RoutedEventArgs e)
+        private async void BtnExcelCikti_OnButtonClick(object sender, RoutedEventArgs e)
         {
+            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(MainListView.ItemsSource);
+            SaveFileDialog sfd = new SaveFileDialog() { Filter = "Excel Workbook|*.xlsx" };
+    
+            Debug.WriteLine($"göster = {view.CurrentItem}");
             
+            if (sfd.ShowDialog() != DialogResult.HasValue)
+            {
+                try
+                {
+                    using (XLWorkbook workbook = new XLWorkbook())
+                    {
+                        DataTable dt = new DataTable();
+                        dt.Columns.AddRange(new DataColumn[9]
+                        {
+                            new DataColumn("#", typeof(int)),
+                            new DataColumn("Firma", typeof(string)),
+                            new DataColumn("Satış Şekli", typeof(string)),
+                            new DataColumn("Sevk Tarihi", typeof(string)),
+                            new DataColumn("Mamul Cinsi", typeof(string)),
+                            new DataColumn("Mamul Adedi", typeof(string)),
+                            new DataColumn("Plakalar", typeof(string)),
+                            new DataColumn("Notlar", typeof(string)),
+                            new DataColumn("Sevk Durumu", typeof(string))
+                        });
+
+                        foreach (var s in items)
+                        {
+                            dt.Rows.Add(s._Sıra, s._Firma_İsim, s._Satış_Şekli, s._Sevk_Tarih, s._Mamul_Cins,
+                                s._Mamul_Adet, s._Plaka, s._Notlar, s._Araç_Sevk_Durumu);
+                        }
+
+                        workbook.Worksheets.Add(dt, "Doğuş Blok");
+                        workbook.SaveAs(sfd.FileName);
+                    }
+
+                    MessageBox.Show("Excel Dosyanız Kaydedilmiştir.", "Mesaj", MessageBoxButton.OK,
+                        MessageBoxImage.Information);
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show($"{exception}", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
         }
 
 
