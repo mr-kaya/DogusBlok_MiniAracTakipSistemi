@@ -5,6 +5,7 @@
         <TargetFramework>net6.0-windows</TargetFramework>
         <Nullable>enable</Nullable>
         <UseWPF>true</UseWPF>
+        <ApplicationIcon>icons\delivered-480.ico</ApplicationIcon>
     </PropertyGroup>
 
     <ItemGroup>
@@ -38,6 +39,9 @@
       <Content Include="icons\excel-100.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
+      <None Remove="icons\delivered-100.png" />
+      <None Remove="icons\delivered-240.png" />
+      <None Remove="icons\delivered-480.png" />
     </ItemGroup>
 
     <ItemGroup>

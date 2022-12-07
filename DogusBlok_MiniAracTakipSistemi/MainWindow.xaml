@@ -155,6 +155,9 @@ Star Fonts => David, Helvetica,
                             </Border>
                         </ScrollViewer>
                 </TabItem>
+            <TabItem Name="HiddenDataGrid" Visibility="Hidden">
+                <DataGrid Name="dg" ItemsSource="{Binding}" HeadersVisibility="Column" Width="635"></DataGrid>
+            </TabItem>
             <TabItem Name="AddPageTabItem" Visibility="Hidden">
                     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                         <Border Padding="5" Background="AntiqueWhite">

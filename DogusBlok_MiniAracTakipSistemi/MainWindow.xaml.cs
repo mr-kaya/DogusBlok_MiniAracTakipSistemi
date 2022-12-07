@@ -507,7 +507,36 @@ namespace DogusBlok_MiniAracTakipSistemi
 
         private void BtnPrint_OnClick(object sender, RoutedEventArgs e)
         {
+            DataTable dt = new DataTable();
+
+            dt.Columns.AddRange(new DataColumn[8]
+            {
+                new DataColumn("#", typeof(int)),
+                new DataColumn("Firma", typeof(string)),
+                new DataColumn("Satış Şekli", typeof(string)),
+                new DataColumn("Sevk Tarihi", typeof(string)),
+                new DataColumn("Mamul Cinsi", typeof(string)),
+                new DataColumn("Mamul Adedi", typeof(string)),
+                new DataColumn("Plakalar", typeof(string)),
+                new DataColumn("Sevk Durumu", typeof(string))
+            });
+            foreach (var s in items)
+            {
+                dt.Rows.Add(s._Sıra, s._Firma_İsim, s._Satış_Şekli, s._Sevk_Tarih, s._Mamul_Cins,
+                    s._Mamul_Adet, s._Plaka, s._Araç_Sevk_Durumu);
+            }
+
+            dg.DataContext = dt.DefaultView;
             
+            PrintDialog Printdlg = new PrintDialog();
+            if (Printdlg.ShowDialog().GetValueOrDefault())
+            {
+                Size pageSize = new Size(Printdlg.PrintableAreaWidth, Printdlg.PrintableAreaHeight);
+                // sizing of the element.
+                dg.Measure(pageSize);
+                dg.Arrange(new Rect(5, 5, pageSize.Width, pageSize.Height));
+                Printdlg.PrintVisual(dg, Title);
+            }
         }
     }
 }
