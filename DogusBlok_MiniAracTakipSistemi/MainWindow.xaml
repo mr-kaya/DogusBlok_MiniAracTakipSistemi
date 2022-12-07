@@ -11,7 +11,7 @@ Star Fonts => David, Helvetica,
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:local="clr-namespace:DogusBlok_MiniAracTakipSistemi"
         mc:Ignorable="d"
-        Title="Araç Giriş Çıkış Sistemi" Icon="icons/search100.png" WindowState="Maximized">
+        Title="Sevkiyat Programı" Icon="icons/search100.png" WindowState="Maximized">
         
         <TabControl>
             <TabItem Name="MainPageTabItem" Visibility="Hidden">

@@ -140,11 +140,6 @@ namespace DogusBlok_MiniAracTakipSistemi
 
             try
             {
-                if (Convert.ToDateTime(BaşlangıçDatePicker.Text) > Convert.ToDateTime(BitişDatePicker.Text))
-                {
-                    BitişDatePicker.Text = BaşlangıçDatePicker.Text;
-                }
-            
                 MySqlCommand selectTable = new MySqlCommand(@$"SELECT * FROM {GenelTerimler.mainTable} WHERE 
                 Sevk_Tarih>='{Convert.ToDateTime(BaşlangıçDatePicker.Text).ToString("yyyy-MM-dd")}' AND Sevk_Tarih<='{Convert.ToDateTime(BitişDatePicker.Text).ToString("yyyy-MM-dd")}'", mySqlConn);
                 MySqlDataReader myDataReader = selectTable.ExecuteReader();
@@ -167,6 +162,11 @@ namespace DogusBlok_MiniAracTakipSistemi
 
                 CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(MainListView.ItemsSource);
                 view.Filter = UserFilterSearch;
+                
+                if (Convert.ToDateTime(BaşlangıçDatePicker.Text) > Convert.ToDateTime(BitişDatePicker.Text))
+                {
+                    BitişDatePicker.Text = BaşlangıçDatePicker.Text;
+                }
             }
             catch (Exception e)
             {

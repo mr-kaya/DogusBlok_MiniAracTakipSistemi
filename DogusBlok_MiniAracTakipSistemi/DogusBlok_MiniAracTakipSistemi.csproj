@@ -6,6 +6,7 @@
         <Nullable>enable</Nullable>
         <UseWPF>true</UseWPF>
         <ApplicationIcon>icons\delivered-480.ico</ApplicationIcon>
+        <AssemblyName>Sevkiyat Programı</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>
