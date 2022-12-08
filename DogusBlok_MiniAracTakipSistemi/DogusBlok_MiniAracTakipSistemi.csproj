@@ -43,12 +43,17 @@
       <None Remove="icons\delivered-100.png" />
       <None Remove="icons\delivered-240.png" />
       <None Remove="icons\delivered-480.png" />
+      <None Remove="root\root.txt" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="ClosedXML" Version="0.97.0" />
       <PackageReference Include="Extended.Wpf.Toolkit" Version="4.4.0" />
       <PackageReference Include="MySql.Data" Version="8.0.31" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="root.txt" />
     </ItemGroup>
 
 </Project>

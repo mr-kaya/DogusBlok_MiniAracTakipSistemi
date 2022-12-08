@@ -23,6 +23,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Office2010.Drawing.ChartDrawing;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.Win32;
 using Color = System.Drawing.Color;
@@ -62,17 +63,63 @@ namespace DogusBlok_MiniAracTakipSistemi
         {
             InitializeComponent();
 
-            ImportDatabaseToGridView();
-        }
-
-        public void ImportDatabaseToGridView()
-        {
             GenelTerimler.myIp = "192.168.1.105";
             GenelTerimler.databaseName = "dogusblok2";
             GenelTerimler.userName = "root2";
             GenelTerimler.mainTable = "sevkiyatDeneme";
             GenelTerimler.charset = "utf8";
             Thread.CurrentThread.CurrentCulture = new CultureInfo("tr-TR");
+            
+            ImportDatabaseToGridView();
+        }
+
+        private void ImportDatabaseToGridView()
+        {
+            string path = @"root.txt";
+            FileInfo fi = new FileInfo(path);
+            
+            if (!fi.Exists)
+            {
+                // Create the file.
+                using (FileStream fs = fi.Create())
+                {
+                    Byte[] info =
+                        new UTF8Encoding(true).GetBytes($"myIp={GenelTerimler.myIp}\n" +
+                                                        $"databaseName={GenelTerimler.databaseName}\n" +
+                                                        $"userName={GenelTerimler.userName}\n" +
+                                                        $"mainTable={GenelTerimler.mainTable}");
+
+                    // Add some information to the file.
+                    fs.Write(info, 0, info.Length);
+                    fs.Close();
+                }
+            }
+            
+            using (StreamReader sr = fi.OpenText())
+            {
+                string[] lines = new string[4];
+                int i = 0;
+                string s = "";
+                while ((s = sr.ReadLine()) != null)
+                {
+                    lines[i] = s;
+                    i++;
+                }
+                
+                string[] kontrolListe = new string[2];
+
+                kontrolListe = lines[0].Split('=');
+                GenelTerimler.myIp = kontrolListe[1];
+
+                kontrolListe = lines[1].Split('=');
+                GenelTerimler.databaseName = kontrolListe[1];
+
+                kontrolListe = lines[2].Split('=');
+                GenelTerimler.userName = kontrolListe[1];
+
+                kontrolListe = lines[3].Split('=');
+                GenelTerimler.mainTable = kontrolListe[1];
+            }
 
             BaşlangıçDatePicker.SelectedDate = DateTime.Now;
             BitişDatePicker.SelectedDate = DateTime.Now;
