@@ -156,7 +156,19 @@ Star Fonts => David, Helvetica,
                         </ScrollViewer>
                 </TabItem>
             <TabItem Name="HiddenDataGrid" Visibility="Hidden">
-                <DataGrid Name="dg" ItemsSource="{Binding}" HeadersVisibility="Column" Width="635"></DataGrid>
+                <DataGrid Name="dg" IsReadOnly="True" ItemsSource="{Binding}" AutoGenerateColumns="False" HeadersVisibility="Column" Width="635">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="#" Binding="{Binding Sayı}" />
+                        <DataGridTextColumn Header="Firma" Binding="{Binding Firma}" />
+                        <DataGridTextColumn Header="Satış Şekli" Binding="{Binding SatışŞekli}" />
+                        <DataGridTextColumn Header="Sevk Tarihi" Binding="{Binding SevkTarihi}" />
+
+                        <DataGridTextColumn Header="Mamul Cinsi" Binding="{Binding MamulCinsi}" />
+                        <DataGridTextColumn Header="Mamul Adedi" Binding="{Binding MamulAdedi}" />
+                        <DataGridTextColumn Header="Plakalar" Binding="{Binding Plakalar}" />
+                        <DataGridTextColumn Header="Sevk Durumu" Binding="{Binding SevkDurumu}" />
+                    </DataGrid.Columns>
+                </DataGrid>
             </TabItem>
             <TabItem Name="AddPageTabItem" Visibility="Hidden">
                     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">

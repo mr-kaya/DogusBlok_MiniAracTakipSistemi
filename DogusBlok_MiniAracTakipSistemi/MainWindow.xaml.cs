@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Configuration;
 using System.Data;
 using System.Diagnostics;
@@ -511,31 +512,104 @@ namespace DogusBlok_MiniAracTakipSistemi
 
             dt.Columns.AddRange(new DataColumn[8]
             {
-                new DataColumn("#", typeof(int)),
+                new DataColumn("Sayı", typeof(int)),
                 new DataColumn("Firma", typeof(string)),
-                new DataColumn("Satış Şekli", typeof(string)),
-                new DataColumn("Sevk Tarihi", typeof(string)),
-                new DataColumn("Mamul Cinsi", typeof(string)),
-                new DataColumn("Mamul Adedi", typeof(string)),
+                new DataColumn("SatışŞekli", typeof(string)),
+                new DataColumn("SevkTarihi", typeof(string)),
+                new DataColumn("MamulCinsi", typeof(string)),
+                new DataColumn("MamulAdedi", typeof(string)),
                 new DataColumn("Plakalar", typeof(string)),
-                new DataColumn("Sevk Durumu", typeof(string))
+                new DataColumn("SevkDurumu", typeof(string))
             });
             foreach (var s in items)
             {
                 dt.Rows.Add(s._Sıra, s._Firma_İsim, s._Satış_Şekli, s._Sevk_Tarih, s._Mamul_Cins,
                     s._Mamul_Adet, s._Plaka, s._Araç_Sevk_Durumu);
             }
-
-            dg.DataContext = dt.DefaultView;
             
-            PrintDialog Printdlg = new PrintDialog();
-            if (Printdlg.ShowDialog().GetValueOrDefault())
+            dg.DataContext = dt.DefaultView;
+
+            PrintDG print = new PrintDG();
+            print.printDG(dg, "Doğuş Blok Sevkiyat Çıktısı"); 
+        }
+    }
+    
+    public  class PrintDG
+    {
+        public void printDG(DataGrid dataGrid, string title)
+        {
+            PrintDialog printDialog = new PrintDialog();
+
+            if (printDialog.ShowDialog() == true)
             {
-                Size pageSize = new Size(Printdlg.PrintableAreaWidth, Printdlg.PrintableAreaHeight);
-                // sizing of the element.
-                dg.Measure(pageSize);
-                dg.Arrange(new Rect(5, 5, pageSize.Width, pageSize.Height));
-                Printdlg.PrintVisual(dg, Title);
+                FlowDocument fd = new FlowDocument();
+
+                Paragraph p = new Paragraph(new Run(title));
+                p.FontStyle = dataGrid.FontStyle;
+                p.FontFamily = dataGrid.FontFamily;
+                p.FontSize = 18;
+                fd.Blocks.Add(p);
+
+                Table table = new Table();
+                TableRowGroup tableRowGroup = new TableRowGroup();
+                TableRow r = new TableRow();
+                fd.PageWidth = printDialog.PrintableAreaWidth;
+                fd.PageHeight = printDialog.PrintableAreaHeight;
+                fd.BringIntoView();
+
+                fd.TextAlignment = TextAlignment.Center;
+                fd.ColumnWidth = 500;
+                table.CellSpacing = 0;
+
+                var headerList = dataGrid.Columns.Select(e => e.Header.ToString()).ToList();
+                List<dynamic> bindList = new List<dynamic>();
+
+                for (int j = 0; j < headerList.Count; j++)
+                {
+                    r.Cells.Add(new TableCell(new Paragraph(new Run(headerList[j]))));
+                    r.Cells[j].ColumnSpan = 4;
+                    r.Cells[j].Padding = new Thickness(4);
+                    r.Cells[j].BorderBrush = Brushes.Black;
+                    r.Cells[j].FontWeight = FontWeights.Bold;
+                    r.Cells[j].Background = Brushes.DarkGray;
+                    r.Cells[j].Foreground = Brushes.White;
+                    r.Cells[j].BorderThickness = new Thickness(1, 1, 1, 1);
+
+                    var binding = (dataGrid.Columns[j] as DataGridBoundColumn)?.Binding as Binding;
+                    if (binding != null)
+                    {
+                        bindList.Add(binding.Path.Path);
+                    }
+                }
+
+                tableRowGroup.Rows.Add(r);
+                table.RowGroups.Add(tableRowGroup);
+
+                foreach (DataRowView row in dataGrid.Items)
+                {
+                    table.BorderBrush = Brushes.Gray;
+                    table.BorderThickness = new Thickness(1, 1, 0, 0);
+                    table.FontStyle = dataGrid.FontStyle;
+                    table.FontFamily = dataGrid.FontFamily;
+                    table.FontSize = 13;
+                    tableRowGroup = new TableRowGroup();
+                    r = new TableRow();
+
+                    for (int j = 0; j < row.Row.ItemArray.Length; j++)
+                    {
+                        r.Cells.Add(new TableCell(new Paragraph(new Run(row.Row.ItemArray[j].ToString()))));
+
+                        r.Cells[j].ColumnSpan = 4;
+                        r.Cells[j].Padding = new Thickness(4);
+                        r.Cells[j].BorderBrush = Brushes.DarkGray;
+                        r.Cells[j].BorderThickness = new Thickness(0, 0, 1, 1);
+                    }
+                    tableRowGroup.Rows.Add(r);
+                    table.RowGroups.Add(tableRowGroup);
+                }
+                
+                fd.Blocks.Add(table);
+                printDialog.PrintDocument(((IDocumentPaginatorSource)fd).DocumentPaginator, "");
             }
         }
     }
