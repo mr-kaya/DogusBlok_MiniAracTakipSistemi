@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Configuration;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Data.Common;
-using MySql.Data.MySqlClient;
+using System.Data;
+using Microsoft.Data.SqlClient;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -19,16 +15,8 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Office2010.Drawing.ChartDrawing;
-using Google.Protobuf.WellKnownTypes;
 using Microsoft.Win32;
-using Color = System.Drawing.Color;
-using Path = System.IO.Path;
-using Type = System.Type;
 using Window = System.Windows.Window;
 
 namespace DogusBlok_MiniAracTakipSistemi
@@ -51,6 +39,7 @@ namespace DogusBlok_MiniAracTakipSistemi
         public static string? myIp { get; set; }
         public static string? databaseName { get; set; }
         public static string? userName { get; set; }
+        public static string? userPassword { get; set; }
         public static string? mainTable { get; set; }
         public static string? charset { get; set; }
     }
@@ -63,18 +52,19 @@ namespace DogusBlok_MiniAracTakipSistemi
         {
             InitializeComponent();
 
-            GenelTerimler.myIp = "192.168.1.105";
-            GenelTerimler.databaseName = "dogusblok2";
-            GenelTerimler.userName = "root2";
-            GenelTerimler.mainTable = "sevkiyatDeneme";
+            GenelTerimler.myIp = "DESKTOP-Q1VKCF3";
+            GenelTerimler.databaseName = "DogusBlokMiniSevkiyatTakip";
+            GenelTerimler.userName = "root";
+            GenelTerimler.userPassword = "baron099";
+            GenelTerimler.mainTable = "sevkiyat";
             GenelTerimler.charset = "utf8";
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("tr-TR");
             
             ImportDatabaseToGridView();
         }
 
         private void ImportDatabaseToGridView()
         {
+            /*
             string path = @"root.txt";
             FileInfo fi = new FileInfo(path);
             
@@ -120,6 +110,7 @@ namespace DogusBlok_MiniAracTakipSistemi
                 kontrolListe = lines[3].Split('=');
                 GenelTerimler.mainTable = kontrolListe[1];
             }
+            */
 
             BaşlangıçDatePicker.SelectedDate = DateTime.Now;
             BitişDatePicker.SelectedDate = DateTime.Now;
@@ -143,7 +134,7 @@ namespace DogusBlok_MiniAracTakipSistemi
         {
             //Arama Kısmı Denenecek!! !!! !!! !!! !!! !!!
                 return ((item as SevkiyatClass)._Firma_İsim.IndexOf(txtFilter.Text, StringComparison.CurrentCultureIgnoreCase) >= 0) 
-                       || ((item as SevkiyatClass)._Satış_Şekli.IndexOf(txtFilter.Text, StringComparison.CurrentCultureIgnoreCase) >= 0) 
+                       || ((item as SevkiyatClass)._Satış_Şekli.ToString().IndexOf(txtFilter.Text, StringComparison.CurrentCultureIgnoreCase) >= 0) 
                        || ((item as SevkiyatClass)._Sevk_Tarih.IndexOf(txtFilter.Text, StringComparison.CurrentCultureIgnoreCase) >= 0)
                        || ((item as SevkiyatClass)._Mamul_Cins.IndexOf(txtFilter.Text, StringComparison.CurrentCultureIgnoreCase) >= 0)
                        || ((item as SevkiyatClass)._Mamul_Adet.IndexOf(txtFilter.Text, StringComparison.CurrentCultureIgnoreCase) >= 0)
@@ -169,8 +160,8 @@ namespace DogusBlok_MiniAracTakipSistemi
 
         public void ListeGöster()
         {
-            String mySqlConnectionString = $"server={GenelTerimler.myIp};port=3306;uid={GenelTerimler.userName};database={GenelTerimler.databaseName};charset={GenelTerimler.charset};";
-            MySqlConnection mySqlConn = new MySqlConnection(mySqlConnectionString);
+            String mySqlConnectionString = $"server={GenelTerimler.myIp};database={GenelTerimler.databaseName};uid={GenelTerimler.userName};password={GenelTerimler.userPassword};Encrypt=False;";
+            SqlConnection mySqlConn = new SqlConnection(mySqlConnectionString);
             items = new List<SevkiyatClass>();
 
             try
@@ -179,7 +170,8 @@ namespace DogusBlok_MiniAracTakipSistemi
             }
             catch (Exception err)
             {
-                MessageBox.Show($"1. Kullandığınız bilgisayarın internet bağlantısını kontrol edin.\n" +
+                MessageBox.Show($"{err}" +
+                    $"1. Kullandığınız bilgisayarın internet bağlantısını kontrol edin.\n" +
                                 $"2. Lütfen Server IP'sinin {GenelTerimler.myIp} olduğundan emin olun. ('Çözüm 1 Server Bağlantı Hatası.mkv' Videosunu izleyin.)\n" +
                                 $"3. Sunucuda Wampserver programı aktif şekilde çalıştığını kontrol edin. (Çözüm 2 Server Bağlantı Hatası.mkv' Videosunu izleyin.)",
                         "Server Bağlantı Hatası!", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -188,13 +180,14 @@ namespace DogusBlok_MiniAracTakipSistemi
 
             try
             {
-                MySqlCommand selectTable = new MySqlCommand(@$"SELECT * FROM {GenelTerimler.mainTable} WHERE 
+                SqlCommand selectTable = new SqlCommand(@$"SELECT * FROM {GenelTerimler.mainTable} WHERE 
                 Sevk_Tarih>='{Convert.ToDateTime(BaşlangıçDatePicker.Text).ToString("yyyy-MM-dd")}' AND Sevk_Tarih<='{Convert.ToDateTime(BitişDatePicker.Text).ToString("yyyy-MM-dd")}'", mySqlConn);
-                MySqlDataReader myDataReader = selectTable.ExecuteReader();
+                SqlDataReader myDataReader = selectTable.ExecuteReader();
             
                 int i = 1;
                 while ( myDataReader.Read())
                 {
+                    Debug.WriteLine($"DEĞER = {i}");
                     items.Add(new SevkiyatClass() { _Sıra = i,
                         _Firma_İsim = myDataReader[0].ToString(), _Satış_Şekli = myDataReader[1].ToString(), 
                         _Sevk_Tarih = Convert.ToDateTime(myDataReader[2]).ToString("dd.MM.yyyy dddd"), _Mamul_Cins = myDataReader[3].ToString(),
@@ -204,6 +197,7 @@ namespace DogusBlok_MiniAracTakipSistemi
 
                     i++;
                 }
+                Debug.WriteLine($"items count = {items.Count}");
                 
                 MainListView.ItemsSource = items;
                 mySqlConn.Close();
@@ -218,7 +212,7 @@ namespace DogusBlok_MiniAracTakipSistemi
             }
             catch (Exception e)
             {
-
+                Debug.WriteLine($"catch yakala = {e}");
             }
             
         }
@@ -240,8 +234,8 @@ namespace DogusBlok_MiniAracTakipSistemi
                         MessageBoxButton.YesNo);
                     if (dialogResult.ToString() == "Yes")
                     {
-                        String mySqlConnectionString = $"server={GenelTerimler.myIp};port=3306;uid={GenelTerimler.userName};database={GenelTerimler.databaseName};charset={GenelTerimler.charset};";
-                        MySqlConnection mySqlConn = new MySqlConnection(mySqlConnectionString);
+                        String mySqlConnectionString = $"server={GenelTerimler.myIp};database={GenelTerimler.databaseName};uid={GenelTerimler.userName};password={GenelTerimler.userPassword};Encrypt=False;";
+                        SqlConnection mySqlConn = new SqlConnection(mySqlConnectionString);
                         try
                         {
                             mySqlConn.Open();
@@ -255,10 +249,10 @@ namespace DogusBlok_MiniAracTakipSistemi
                             throw;
                         }
                         
-                        MySqlCommand sqlSil = new MySqlCommand($@"DELETE FROM {GenelTerimler.mainTable} WHERE 
-                                Firma='{sevkiyatClass._Firma_İsim}' AND Satis_Sekli='{sevkiyatClass._Satış_Şekli}' AND Sevk_Tarih='{Convert.ToDateTime(sevkiyatClass._Sevk_Tarih).ToString("yyyy-MM-dd")}' AND
-                                Mamul_Cins='{sevkiyatClass._Mamul_Cins}' AND Mamul_Aded='{sevkiyatClass._Mamul_Adet}' AND Plaka='{sevkiyatClass._Plaka}' AND
-                                Notlar='{sevkiyatClass._Notlar}' AND Arac_Sevk_Durumu='{sevkiyatClass._Araç_Sevk_Durumu}'", mySqlConn);
+                        SqlCommand sqlSil = new SqlCommand($@"DELETE FROM {GenelTerimler.mainTable} WHERE 
+                                Firma LIKE '{sevkiyatClass._Firma_İsim}' AND Satis_Sekli LIKE '{sevkiyatClass._Satış_Şekli}' AND Sevk_Tarih LIKE '{Convert.ToDateTime(sevkiyatClass._Sevk_Tarih).ToString("yyyy-MM-dd")}' AND
+                                Mamul_Cins LIKE '{sevkiyatClass._Mamul_Cins}' AND Mamul_Aded LIKE '{sevkiyatClass._Mamul_Adet}' AND Plaka LIKE '{sevkiyatClass._Plaka}' AND
+                                Notlar LIKE '{sevkiyatClass._Notlar}' AND Arac_Sevk_Durumu LIKE '{sevkiyatClass._Araç_Sevk_Durumu}'", mySqlConn);
                         int i = sqlSil.ExecuteNonQuery();
                         mySqlConn.Close();
 
@@ -290,6 +284,8 @@ namespace DogusBlok_MiniAracTakipSistemi
             PlakaTextBoxUpdate.Text = rowSevkiyat._Plaka;
             NotTextBoxUpdate.Text = rowSevkiyat._Notlar;
             AraçSevkDurumuComboBoxUpdate.Text = rowSevkiyat._Araç_Sevk_Durumu;
+            
+            Debug.WriteLine($"Değer = {rowSevkiyat._Araç_Sevk_Durumu} AND {rowSevkiyat._Araç_Sevk_Durumu!.Length}");
         }
         
         private void ButtonGüncelle_OnClick(object sender, RoutedEventArgs e)
@@ -328,8 +324,8 @@ namespace DogusBlok_MiniAracTakipSistemi
                 String.IsNullOrEmpty(hataTutucu[2]))
             {
                 string mySqlConnectionString =
-                    $"server={GenelTerimler.myIp};port=3306;uid={GenelTerimler.userName};database={GenelTerimler.databaseName};charset={GenelTerimler.charset};";
-                MySqlConnection mySqlConn = new MySqlConnection(mySqlConnectionString);
+                    $"server={GenelTerimler.myIp};database={GenelTerimler.databaseName};uid={GenelTerimler.userName};password={GenelTerimler.userPassword};Encrypt=False;";
+                SqlConnection mySqlConn = new SqlConnection(mySqlConnectionString);
 
                 char[] firmaİsimChar = FirmaTextBoxUpdate.Text.ToCharArray();
                 if (char.IsLower(firmaİsimChar[0]))
@@ -372,14 +368,14 @@ namespace DogusBlok_MiniAracTakipSistemi
                 }
 
                 SevkiyatClass rowSevkiyat = MainListView.SelectedItem as SevkiyatClass;
-                MySqlCommand updateCommand = new MySqlCommand($@"UPDATE {GenelTerimler.mainTable} SET 
+                SqlCommand updateCommand = new SqlCommand($@"UPDATE {GenelTerimler.mainTable} SET 
                            Firma='{firmaİsim}', Satis_Sekli='{SatışŞekliIntegerUpDownUpdate.Text}', Sevk_Tarih='{Convert.ToDateTime(SevkDatePickerUpdate.Text).ToString("yyyy-MM-dd")}', 
                            Mamul_Cins='{MamulCinsTextBoxUpdate.Text.Replace("'","\"")}', Mamul_Aded='{MamulAdetTextBoxUpdate.Text.Replace("'","\"")}', Plaka='{plakaNumarası}',
                            Notlar='{NotTextBoxUpdate.Text.Replace("'","\"")}', Arac_Sevk_Durumu='{AraçSevkDurumuComboBoxUpdate.Text}' 
                            WHERE 
-                                Firma='{rowSevkiyat._Firma_İsim}' AND Satis_Sekli='{rowSevkiyat._Satış_Şekli}' AND Sevk_Tarih='{Convert.ToDateTime(rowSevkiyat._Sevk_Tarih).ToString("yyyy-MM-dd")}' AND 
-                                Mamul_Cins='{rowSevkiyat._Mamul_Cins}' AND Mamul_Aded='{rowSevkiyat._Mamul_Adet}' AND Plaka='{rowSevkiyat._Plaka}' AND
-                                Notlar='{rowSevkiyat._Notlar}' AND Arac_Sevk_Durumu='{rowSevkiyat._Araç_Sevk_Durumu}'", mySqlConn) ;
+                                Firma LIKE '{rowSevkiyat._Firma_İsim}' AND Satis_Sekli LIKE '{rowSevkiyat._Satış_Şekli}' AND Sevk_Tarih LIKE '{Convert.ToDateTime(rowSevkiyat._Sevk_Tarih).ToString("yyyy-MM-dd")}' AND 
+                                Mamul_Cins LIKE '{rowSevkiyat._Mamul_Cins}' AND Mamul_Aded LIKE '{rowSevkiyat._Mamul_Adet}' AND Plaka LIKE '{rowSevkiyat._Plaka}' AND
+                                Notlar LIKE '{rowSevkiyat._Notlar}' AND Arac_Sevk_Durumu LIKE '{rowSevkiyat._Araç_Sevk_Durumu}'", mySqlConn) ;
                 updateCommand.ExecuteNonQuery();
                 mySqlConn.Close();
 
@@ -427,8 +423,8 @@ namespace DogusBlok_MiniAracTakipSistemi
             HataTutucuTextBox.Text = $"{hataTutucu[0]}\n{hataTutucu[1]}\n{hataTutucu[2]}";
             if (String.IsNullOrEmpty(hataTutucu[0]) && String.IsNullOrEmpty(hataTutucu[1]) && String.IsNullOrEmpty(hataTutucu[2]))
             {
-                string mySqlConnectionString = $"server={GenelTerimler.myIp};port=3306;uid={GenelTerimler.userName};database={GenelTerimler.databaseName};charset={GenelTerimler.charset};";
-                MySqlConnection mySqlConn = new MySqlConnection(mySqlConnectionString);
+                string mySqlConnectionString = $"server={GenelTerimler.myIp};database={GenelTerimler.databaseName};uid={GenelTerimler.userName};password={GenelTerimler.userPassword};Encrypt=False;";
+                SqlConnection mySqlConn = new SqlConnection(mySqlConnectionString);
 
                 char[] firmaİsimChar = FirmaTextBox.Text.ToCharArray();
                 if (char.IsLower(firmaİsimChar[0]))
@@ -470,7 +466,7 @@ namespace DogusBlok_MiniAracTakipSistemi
                     throw;
                 }
                 
-                MySqlCommand sqlAddCommand = new MySqlCommand($@"INSERT INTO {GenelTerimler.mainTable} (Firma, Satis_Sekli, Sevk_Tarih, Mamul_Cins, Mamul_Aded, Plaka, Notlar, Arac_Sevk_Durumu) VALUES ('{firmaİsim}', '{SatışŞekliIntegerUpDown.Text}', '{Convert.ToDateTime(SevkDatePicker.Text).ToString("yyyy-MM-dd")}', '{MamulCinsTextBox.Text.Replace("'","\"")}', '{MamulAdetTextBox.Text.Replace("'","\"")}', '{plakaNumarası}', '{NotTextBox.Text.Replace("'","\"")}', '{AraçSevkDurumuComboBox.Text}')", mySqlConn);
+                SqlCommand sqlAddCommand = new SqlCommand($@"INSERT INTO {GenelTerimler.mainTable} (Firma, Satis_Sekli, Sevk_Tarih, Mamul_Cins, Mamul_Aded, Plaka, Notlar, Arac_Sevk_Durumu) VALUES ('{firmaİsim}', '{SatışŞekliIntegerUpDown.Text}', '{Convert.ToDateTime(SevkDatePicker.Text).ToString("yyyy-MM-dd")}', '{MamulCinsTextBox.Text.Replace("'","\"")}', '{MamulAdetTextBox.Text.Replace("'","\"")}', '{plakaNumarası}', '{NotTextBox.Text.Replace("'","\"")}', '{AraçSevkDurumuComboBox.Text}')", mySqlConn);
                 sqlAddCommand.ExecuteNonQuery();
                 mySqlConn.Close();
 
