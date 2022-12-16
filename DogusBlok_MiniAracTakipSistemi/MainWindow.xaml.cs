@@ -8,6 +8,7 @@ using System.Windows;
 using System.Data;
 using Microsoft.Data.SqlClient;
 using System.Globalization;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Controls;
@@ -57,14 +58,12 @@ namespace DogusBlok_MiniAracTakipSistemi
             GenelTerimler.userName = "root";
             GenelTerimler.userPassword = "baron099";
             GenelTerimler.mainTable = "sevkiyat";
-            GenelTerimler.charset = "utf8";
-            
+
             ImportDatabaseToGridView();
         }
 
         private void ImportDatabaseToGridView()
         {
-            /*
             string path = @"root.txt";
             FileInfo fi = new FileInfo(path);
             
@@ -77,9 +76,8 @@ namespace DogusBlok_MiniAracTakipSistemi
                         new UTF8Encoding(true).GetBytes($"myIp={GenelTerimler.myIp}\n" +
                                                         $"databaseName={GenelTerimler.databaseName}\n" +
                                                         $"userName={GenelTerimler.userName}\n" +
+                                                        $"userPassword={GenelTerimler.userPassword}\n" +
                                                         $"mainTable={GenelTerimler.mainTable}");
-
-                    // Add some information to the file.
                     fs.Write(info, 0, info.Length);
                     fs.Close();
                 }
@@ -87,11 +85,12 @@ namespace DogusBlok_MiniAracTakipSistemi
             
             using (StreamReader sr = fi.OpenText())
             {
-                string[] lines = new string[4];
+                string[] lines = new string[5];
                 int i = 0;
                 string s = "";
                 while ((s = sr.ReadLine()) != null)
                 {
+                    Debug.WriteLine($"sıra={s}");
                     lines[i] = s;
                     i++;
                 }
@@ -108,9 +107,11 @@ namespace DogusBlok_MiniAracTakipSistemi
                 GenelTerimler.userName = kontrolListe[1];
 
                 kontrolListe = lines[3].Split('=');
+                GenelTerimler.userPassword = kontrolListe[1];
+
+                kontrolListe = lines[4].Split('=');
                 GenelTerimler.mainTable = kontrolListe[1];
             }
-            */
 
             BaşlangıçDatePicker.SelectedDate = DateTime.Now;
             BitişDatePicker.SelectedDate = DateTime.Now;
