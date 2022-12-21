@@ -26,6 +26,7 @@ namespace DogusBlok_MiniAracTakipSistemi
     {
         public int? _Sıra { get; set; }
         public string? _Firma_İsim { get; set; }
+        public string? _Teslim { get; set; }
         public string? _Satış_Şekli { get; set; }
         public string _Sevk_Tarih { get; set; }
         public string? _Mamul_Cins { get; set; }
@@ -144,9 +145,6 @@ namespace DogusBlok_MiniAracTakipSistemi
                        || ((item as SevkiyatClass)._Araç_Sevk_Durumu.IndexOf(txtFilter.Text, StringComparison.CurrentCultureIgnoreCase) >= 0);
         }
 
-        
-        
-        
         private void TxtFilter_OnTextChanged(object sender, TextChangedEventArgs e) 
         {
             try
@@ -172,10 +170,8 @@ namespace DogusBlok_MiniAracTakipSistemi
             catch (Exception err)
             {
                 MessageBox.Show($"{err}" +
-                    $"1. Kullandığınız bilgisayarın internet bağlantısını kontrol edin.\n" +
-                                $"2. Lütfen Server IP'sinin {GenelTerimler.myIp} olduğundan emin olun. ('Çözüm 1 Server Bağlantı Hatası.mkv' Videosunu izleyin.)\n" +
-                                $"3. Sunucuda Wampserver programı aktif şekilde çalıştığını kontrol edin. (Çözüm 2 Server Bağlantı Hatası.mkv' Videosunu izleyin.)",
-                        "Server Bağlantı Hatası!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    $"1. Kullandığınız bilgisayarın internet bağlantısını kontrol edin.\n",
+                            "Server Bağlantı Hatası!", MessageBoxButton.OK, MessageBoxImage.Error);
                 throw;
             }
 
@@ -188,17 +184,20 @@ namespace DogusBlok_MiniAracTakipSistemi
                 int i = 1;
                 while ( myDataReader.Read())
                 {
-                    Debug.WriteLine($"DEĞER = {i}");
                     items.Add(new SevkiyatClass() { _Sıra = i,
-                        _Firma_İsim = myDataReader[0].ToString(), _Satış_Şekli = myDataReader[1].ToString(), 
-                        _Sevk_Tarih = Convert.ToDateTime(myDataReader[2]).ToString("dd.MM.yyyy dddd"), _Mamul_Cins = myDataReader[3].ToString(),
-                        _Mamul_Adet = myDataReader[4].ToString(), _Plaka = myDataReader[5].ToString(),
-                        _Notlar = myDataReader[6].ToString(), _Araç_Sevk_Durumu = myDataReader[7].ToString()
+                        _Firma_İsim = myDataReader[0].ToString(),
+                        _Teslim = myDataReader[1].ToString(),
+                        _Satış_Şekli = myDataReader[2].ToString(), 
+                        _Sevk_Tarih = Convert.ToDateTime(myDataReader[3]).ToString("dd.MM.yyyy dddd"), 
+                        _Mamul_Cins = myDataReader[4].ToString(),
+                        _Mamul_Adet = myDataReader[5].ToString(), 
+                        _Plaka = myDataReader[6].ToString(),
+                        _Notlar = myDataReader[7].ToString(), 
+                        _Araç_Sevk_Durumu = myDataReader[8].ToString()
                     });
 
                     i++;
                 }
-                Debug.WriteLine($"items count = {items.Count}");
                 
                 MainListView.ItemsSource = items;
                 mySqlConn.Close();
@@ -220,6 +219,7 @@ namespace DogusBlok_MiniAracTakipSistemi
         
         private void BtnAdd_OnClick(object sender, RoutedEventArgs e)
         {
+            SevkDatePicker.SelectedDate = DateTime.Now;
             AddPageTabItem.IsSelected = true;
         }
 
@@ -251,7 +251,7 @@ namespace DogusBlok_MiniAracTakipSistemi
                         }
                         
                         SqlCommand sqlSil = new SqlCommand($@"DELETE FROM {GenelTerimler.mainTable} WHERE 
-                                Firma LIKE '{sevkiyatClass._Firma_İsim}' AND Satis_Sekli LIKE '{sevkiyatClass._Satış_Şekli}' AND Sevk_Tarih LIKE '{Convert.ToDateTime(sevkiyatClass._Sevk_Tarih).ToString("yyyy-MM-dd")}' AND
+                                Firma LIKE '{sevkiyatClass._Firma_İsim}' AND Teslim LIKE '{sevkiyatClass._Teslim}' AND Satis_Sekli LIKE '{sevkiyatClass._Satış_Şekli}' AND Sevk_Tarih LIKE '{Convert.ToDateTime(sevkiyatClass._Sevk_Tarih).ToString("yyyy-MM-dd")}' AND
                                 Mamul_Cins LIKE '{sevkiyatClass._Mamul_Cins}' AND Mamul_Aded LIKE '{sevkiyatClass._Mamul_Adet}' AND Plaka LIKE '{sevkiyatClass._Plaka}' AND
                                 Notlar LIKE '{sevkiyatClass._Notlar}' AND Arac_Sevk_Durumu LIKE '{sevkiyatClass._Araç_Sevk_Durumu}'", mySqlConn);
                         int i = sqlSil.ExecuteNonQuery();
@@ -285,8 +285,19 @@ namespace DogusBlok_MiniAracTakipSistemi
             PlakaTextBoxUpdate.Text = rowSevkiyat._Plaka;
             NotTextBoxUpdate.Text = rowSevkiyat._Notlar;
             AraçSevkDurumuComboBoxUpdate.Text = rowSevkiyat._Araç_Sevk_Durumu;
+
+            if (FabrikaTeslimRadioButtonUpdate.Content.ToString() == rowSevkiyat._Teslim)
+            {
+                InsaatTeslimRadioButtonUpdate.IsChecked = false;
+                FabrikaTeslimRadioButtonUpdate.IsChecked = true;
+            }
+            else
+            {
+                FabrikaTeslimRadioButtonUpdate.IsChecked = false;
+                InsaatTeslimRadioButtonUpdate.IsChecked = true;
+            }
             
-            Debug.WriteLine($"Değer = {rowSevkiyat._Araç_Sevk_Durumu} AND {rowSevkiyat._Araç_Sevk_Durumu!.Length}");
+            
         }
         
         private void ButtonGüncelle_OnClick(object sender, RoutedEventArgs e)
@@ -344,6 +355,16 @@ namespace DogusBlok_MiniAracTakipSistemi
                         }
                     }
                 }
+                
+                string? teslimRadioButton;
+                if (InsaatTeslimRadioButtonUpdate.IsChecked == true)
+                {
+                    teslimRadioButton = InsaatTeslimRadioButtonUpdate.Content.ToString();
+                }
+                else
+                {
+                    teslimRadioButton = FabrikaTeslimRadioButtonUpdate.Content.ToString();
+                }
 
                 string firmaİsim = new string(firmaİsimChar.ToArray());
                 firmaİsim = firmaİsim.Replace("'","\"");
@@ -370,11 +391,11 @@ namespace DogusBlok_MiniAracTakipSistemi
 
                 SevkiyatClass rowSevkiyat = MainListView.SelectedItem as SevkiyatClass;
                 SqlCommand updateCommand = new SqlCommand($@"UPDATE {GenelTerimler.mainTable} SET 
-                           Firma='{firmaİsim}', Satis_Sekli='{SatışŞekliIntegerUpDownUpdate.Text}', Sevk_Tarih='{Convert.ToDateTime(SevkDatePickerUpdate.Text).ToString("yyyy-MM-dd")}', 
+                           Firma='{firmaİsim}', Teslim='{teslimRadioButton}', Satis_Sekli='{SatışŞekliIntegerUpDownUpdate.Text}', Sevk_Tarih='{Convert.ToDateTime(SevkDatePickerUpdate.Text).ToString("yyyy-MM-dd")}', 
                            Mamul_Cins='{MamulCinsTextBoxUpdate.Text.Replace("'","\"")}', Mamul_Aded='{MamulAdetTextBoxUpdate.Text.Replace("'","\"")}', Plaka='{plakaNumarası}',
                            Notlar='{NotTextBoxUpdate.Text.Replace("'","\"")}', Arac_Sevk_Durumu='{AraçSevkDurumuComboBoxUpdate.Text}' 
                            WHERE 
-                                Firma LIKE '{rowSevkiyat._Firma_İsim}' AND Satis_Sekli LIKE '{rowSevkiyat._Satış_Şekli}' AND Sevk_Tarih LIKE '{Convert.ToDateTime(rowSevkiyat._Sevk_Tarih).ToString("yyyy-MM-dd")}' AND 
+                                Firma LIKE '{rowSevkiyat._Firma_İsim}' AND Teslim LIKE '{rowSevkiyat._Teslim}' AND Satis_Sekli LIKE '{rowSevkiyat._Satış_Şekli}' AND Sevk_Tarih LIKE '{Convert.ToDateTime(rowSevkiyat._Sevk_Tarih).ToString("yyyy-MM-dd")}' AND 
                                 Mamul_Cins LIKE '{rowSevkiyat._Mamul_Cins}' AND Mamul_Aded LIKE '{rowSevkiyat._Mamul_Adet}' AND Plaka LIKE '{rowSevkiyat._Plaka}' AND
                                 Notlar LIKE '{rowSevkiyat._Notlar}' AND Arac_Sevk_Durumu LIKE '{rowSevkiyat._Araç_Sevk_Durumu}'", mySqlConn) ;
                 updateCommand.ExecuteNonQuery();
@@ -454,6 +475,16 @@ namespace DogusBlok_MiniAracTakipSistemi
                     plakaNumarası = plakaNumarası.Replace(" ", "").ToUpper();
                 }
 
+                string? teslimRadioButton;
+                if (InsaatTeslimRadioButton.IsChecked == true)
+                {
+                    teslimRadioButton = InsaatTeslimRadioButton.Content.ToString();
+                }
+                else
+                {
+                    teslimRadioButton = FabrikaTeslimRadioButton.Content.ToString();
+                }
+                
                 try
                 {
                     mySqlConn.Open();
@@ -466,14 +497,16 @@ namespace DogusBlok_MiniAracTakipSistemi
                         "Server Bağlantı Hatası!", MessageBoxButton.OK, MessageBoxImage.Error);
                     throw;
                 }
-                
-                SqlCommand sqlAddCommand = new SqlCommand($@"INSERT INTO {GenelTerimler.mainTable} (Firma, Satis_Sekli, Sevk_Tarih, Mamul_Cins, Mamul_Aded, Plaka, Notlar, Arac_Sevk_Durumu) VALUES ('{firmaİsim}', '{SatışŞekliIntegerUpDown.Text}', '{Convert.ToDateTime(SevkDatePicker.Text).ToString("yyyy-MM-dd")}', '{MamulCinsTextBox.Text.Replace("'","\"")}', '{MamulAdetTextBox.Text.Replace("'","\"")}', '{plakaNumarası}', '{NotTextBox.Text.Replace("'","\"")}', '{AraçSevkDurumuComboBox.Text}')", mySqlConn);
+
+                SqlCommand sqlAddCommand = new SqlCommand($@"INSERT INTO {GenelTerimler.mainTable} (Firma, Teslim, Satis_Sekli, Sevk_Tarih, Mamul_Cins, Mamul_Aded, Plaka, Notlar, Arac_Sevk_Durumu) VALUES ('{firmaİsim}', '{teslimRadioButton}', '{SatışŞekliIntegerUpDown.Text}', '{Convert.ToDateTime(SevkDatePicker.Text).ToString("yyyy-MM-dd")}', '{MamulCinsTextBox.Text.Replace("'","\"")}', '{MamulAdetTextBox.Text.Replace("'","\"")}', '{plakaNumarası}', '{NotTextBox.Text.Replace("'","\"")}', '{AraçSevkDurumuComboBox.Text}')", mySqlConn);
                 sqlAddCommand.ExecuteNonQuery();
                 mySqlConn.Close();
 
                 FirmaTextBox.Text = SatışŞekliIntegerUpDown.Text = SevkDatePicker.Text = 
                     MamulCinsTextBox.Text = MamulAdetTextBox.Text = PlakaTextBox.Text =
                         NotTextBox.Text = AraçSevkDurumuComboBox.Text = "";
+                InsaatTeslimRadioButton.IsChecked = false;
+                FabrikaTeslimRadioButton.IsChecked = true;
 
                 MainPageTabItem.IsSelected = true;
                 
@@ -487,6 +520,9 @@ namespace DogusBlok_MiniAracTakipSistemi
             FirmaTextBox.Text = SatışŞekliIntegerUpDown.Text = SevkDatePicker.Text = 
                 MamulCinsTextBox.Text = MamulAdetTextBox.Text = PlakaTextBox.Text =
                     NotTextBox.Text = AraçSevkDurumuComboBox.Text = "";
+            
+            InsaatTeslimRadioButton.IsChecked = false;
+            FabrikaTeslimRadioButton.IsChecked = true;
             
             MainPageTabItem.IsSelected = true;
         }
@@ -516,10 +552,11 @@ namespace DogusBlok_MiniAracTakipSistemi
                     using (XLWorkbook workbook = new XLWorkbook())
                     {
                         DataTable dt = new DataTable();
-                        dt.Columns.AddRange(new DataColumn[9]
+                        dt.Columns.AddRange(new DataColumn[10]
                         {
                             new DataColumn("#", typeof(int)),
                             new DataColumn("Firma", typeof(string)),
+                            new DataColumn("Teslimat", typeof(string)),
                             new DataColumn("Satış Şekli", typeof(string)),
                             new DataColumn("Sevk Tarihi", typeof(string)),
                             new DataColumn("Mamul Cinsi", typeof(string)),
@@ -531,7 +568,12 @@ namespace DogusBlok_MiniAracTakipSistemi
 
                         foreach (var s in items)
                         {
-                            dt.Rows.Add(s._Sıra, s._Firma_İsim, s._Satış_Şekli, s._Sevk_Tarih, s._Mamul_Cins,
+                            if (s._Araç_Sevk_Durumu == "")
+                            {
+                                s._Araç_Sevk_Durumu = "Gelmedi";
+                            }
+                            
+                            dt.Rows.Add(s._Sıra, s._Firma_İsim, s._Teslim, s._Satış_Şekli, s._Sevk_Tarih, s._Mamul_Cins,
                                 s._Mamul_Adet, s._Plaka, s._Notlar, s._Araç_Sevk_Durumu);
                         }
 
@@ -554,10 +596,11 @@ namespace DogusBlok_MiniAracTakipSistemi
         {
             DataTable dt = new DataTable();
 
-            dt.Columns.AddRange(new DataColumn[8]
+            dt.Columns.AddRange(new DataColumn[9]
             {
                 new DataColumn("Sayı", typeof(int)),
                 new DataColumn("Firma", typeof(string)),
+                new DataColumn("Teslim", typeof(string)),
                 new DataColumn("SatışŞekli", typeof(string)),
                 new DataColumn("SevkTarihi", typeof(string)),
                 new DataColumn("MamulCinsi", typeof(string)),
@@ -567,14 +610,19 @@ namespace DogusBlok_MiniAracTakipSistemi
             });
             foreach (var s in items)
             {
-                dt.Rows.Add(s._Sıra, s._Firma_İsim, s._Satış_Şekli, s._Sevk_Tarih, s._Mamul_Cins,
+                if (s._Araç_Sevk_Durumu == "")
+                {
+                    s._Araç_Sevk_Durumu = "Gelmedi";
+                }
+                
+                dt.Rows.Add(s._Sıra, s._Firma_İsim, s._Teslim, s._Satış_Şekli, s._Sevk_Tarih, s._Mamul_Cins,
                     s._Mamul_Adet, s._Plaka, s._Araç_Sevk_Durumu);
             }
             
             dg.DataContext = dt.DefaultView;
 
             PrintDG print = new PrintDG();
-            print.printDG(dg, "Doğuş Blok Sevkiyat Çıktısı"); 
+            print.printDG(dg, $"{BaşlangıçDatePicker.Text} / {BitişDatePicker.Text}   Doğuş Blok Sevkiyat Çıktısı"); 
         }
     }
     
@@ -653,7 +701,18 @@ namespace DogusBlok_MiniAracTakipSistemi
                 }
                 
                 fd.Blocks.Add(table);
-                printDialog.PrintDocument(((IDocumentPaginatorSource)fd).DocumentPaginator, "");
+                try
+                {
+                    printDialog.PrintDocument(((IDocumentPaginatorSource)fd).DocumentPaginator, "");
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(
+                        "Kaydetmeye çalıştığınız PDF dosyasıyla aynı isimde bir PDF dosyası bilgisayarınızda açık. \nLütfen açık olan PDF dosyasını kapatın ve tekrar deneyin.",
+                        "Hata!",MessageBoxButton.OK, MessageBoxImage.Stop);
+                    Console.WriteLine(e);
+                    
+                }
             }
         }
     }

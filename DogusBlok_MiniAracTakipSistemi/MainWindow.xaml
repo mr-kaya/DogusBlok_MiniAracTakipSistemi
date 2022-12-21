@@ -96,6 +96,7 @@ Star Fonts => David, Helvetica,
                                                    HeadersVisibility="Column"  HorizontalGridLinesBrush="White" VerticalGridLinesBrush="White" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="20"  MinWidth="400" Background="FloralWhite" 
                                                    FontSize="14" FontWeight="Normal" FontFamily="Uni Sans" RowBackground="#B8CCE4" AlternatingRowBackground="#DBE5F1"
                                                    Name="MainListView" IsReadOnly="True" AutoGenerateColumns="False">
+                                            
                                             <DataGrid.Resources>
                                                 <Style TargetType="DataGridRow">
                                                     <EventSetter Event="MouseDoubleClick" Handler="DataGridRow_DoubleClick" />
@@ -112,7 +113,7 @@ Star Fonts => David, Helvetica,
                                                     <Setter Property="VerticalContentAlignment" Value="Stretch" />
                                                 </Style>
                                                 <Style TargetType="DataGridCell">
-                                                    <Setter Property="Padding" Value="8" />
+                                                    <Setter Property="Padding" Value="3" />
                                                     <Setter Property="HorizontalAlignment" Value="Stretch" />
                                                     <Setter Property="FontWeight" Value="DemiBold" />
                                                     <Setter Property="Template">
@@ -126,13 +127,13 @@ Star Fonts => David, Helvetica,
                                                     </Setter>
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding _Araç_Sevk_Durumu}" Value="Yükleniyor">
-                                                            <Setter Property="Background" Value="Chocolate" />
-                                                            <Setter Property="FontWeight" Value="Normal" />
-                                                            <Setter Property="Foreground" Value="White" />
+                                                            <Setter Property="Background" Value="#FFE400" />
+                                                            <Setter Property="FontWeight" Value="DemiBold" />
+                                                            <Setter Property="Foreground" Value="Black" />
                                                         </DataTrigger>
                                                         <DataTrigger Binding="{Binding _Araç_Sevk_Durumu}" Value="Çıktı">
-                                                            <Setter Property="Background" Value="DarkGreen" />
-                                                            <Setter Property="FontWeight" Value="Normal" />
+                                                            <Setter Property="Background" Value="#FF0000" />
+                                                            <Setter Property="FontWeight" Value="DemiBold" />
                                                             <Setter Property="Foreground" Value="White" />
                                                         </DataTrigger>
                                                     </Style.Triggers>
@@ -141,12 +142,13 @@ Star Fonts => David, Helvetica,
                                             <DataGrid.Columns>
                                                 <DataGridTextColumn Header="#" Binding="{Binding _Sıra}" Width="50" />
                                                 <DataGridTextColumn Header="Firma" Binding="{Binding _Firma_İsim}" Width="250" />
+                                                <DataGridTextColumn Header="Teslimat" Binding="{Binding _Teslim}" Visibility="Visible" />
                                                 <DataGridTextColumn Header="Satış Şekli" Binding="{Binding _Satış_Şekli}" Width="100" />
-                                                <DataGridTextColumn Header="Sevk Tarihi" Binding="{Binding _Sevk_Tarih}" Width="125" />
-                                                <DataGridTextColumn Header="Mamul Cinsi" Binding="{Binding _Mamul_Cins}" Width="125" />
-                                                <DataGridTextColumn Header="Mamul Adedi" Binding="{Binding _Mamul_Adet}" Width="125" />
+                                                <DataGridTextColumn Header="Sevk Tarihi" Binding="{Binding _Sevk_Tarih}" Width="175" />
+                                                <DataGridTextColumn Header="Mamul Cinsi" Binding="{Binding _Mamul_Cins}" Width="175" />
+                                                <DataGridTextColumn Header="Mamul Adedi" Binding="{Binding _Mamul_Adet}" Width="175" />
                                                 <DataGridTextColumn Header="Plakalar" Binding="{Binding _Plaka}" Width="110" />
-                                                <DataGridTextColumn Header="Notlar" Binding="{Binding _Notlar}" Width="400" FontSize="12" FontWeight="Normal" />
+                                                <DataGridTextColumn Header="Notlar" Binding="{Binding _Notlar}" Width="200" FontSize="12" FontWeight="Normal" />
                                                 <DataGridTextColumn Header="Sevk Durumu" Binding="{Binding _Araç_Sevk_Durumu}" Width="100" />
                                             </DataGrid.Columns>
                                         </DataGrid>
@@ -155,21 +157,6 @@ Star Fonts => David, Helvetica,
                             </Border>
                         </ScrollViewer>
                 </TabItem>
-            <TabItem Name="HiddenDataGrid" Visibility="Hidden">
-                <DataGrid Name="dg" IsReadOnly="True" ItemsSource="{Binding}" AutoGenerateColumns="False" HeadersVisibility="Column" Width="635">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="#" Binding="{Binding Sayı}" />
-                        <DataGridTextColumn Header="Firma" Binding="{Binding Firma}" />
-                        <DataGridTextColumn Header="Satış Şekli" Binding="{Binding SatışŞekli}" />
-                        <DataGridTextColumn Header="Sevk Tarihi" Binding="{Binding SevkTarihi}" />
-
-                        <DataGridTextColumn Header="Mamul Cinsi" Binding="{Binding MamulCinsi}" />
-                        <DataGridTextColumn Header="Mamul Adedi" Binding="{Binding MamulAdedi}" />
-                        <DataGridTextColumn Header="Plakalar" Binding="{Binding Plakalar}" />
-                        <DataGridTextColumn Header="Sevk Durumu" Binding="{Binding SevkDurumu}" />
-                    </DataGrid.Columns>
-                </DataGrid>
-            </TabItem>
             <TabItem Name="AddPageTabItem" Visibility="Hidden">
                     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                         <Border Padding="5" Background="AntiqueWhite">
@@ -178,6 +165,7 @@ Star Fonts => David, Helvetica,
                                     <RowDefinition Height="96" />
                                     <RowDefinition Height="48" />
                                     <RowDefinition Height="48" />
+                                    <RowDefinition Height="57" />
                                     <RowDefinition Height="48" />
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
@@ -186,40 +174,48 @@ Star Fonts => David, Helvetica,
                                     <RowDefinition Height="50" />
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="96" />
+                                    <ColumnDefinition Width="144" />
                                     <ColumnDefinition Width="144" />
                                     <ColumnDefinition Width="144" />
                                     <ColumnDefinition Width="18" />
                                     <ColumnDefinition Width="144" />
                                     <ColumnDefinition Width="144" />
                                 </Grid.ColumnDefinitions>
-                                    
-                                <TextBlock Grid.Row="1" Grid.Column="1" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam"   Text="Gideceği Firma Adı : " />
+                                
+                                <TextBlock Grid.Row="1" Grid.Column="1" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam" Text="Gideceği Firma Adı : " />
                                 <TextBox Name="FirmaTextBox" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Stretch" FontSize="14" />
                                 <TextBlock Grid.Row="1" Grid.Column="3" Text="*" Foreground="Red" FontSize="20" />
-                                <TextBlock Name="HataTutucuTextBox" Grid.Row="1" Grid.Column="4" Grid.ColumnSpan="5" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Red" FontSize="12" FontWeight="Bold" FontFamily="Arial Rounded MT" Text=""></TextBlock>
+                                <TextBlock Name="HataTutucuTextBox" Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="5" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Red" FontSize="12" FontWeight="Bold" FontFamily="Arial Rounded MT" Text=""></TextBlock>
                                 
-                                <TextBlock Grid.Row="2" Grid.Column="1" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam"  Text="Satış Şekli : " />
-                                <xctk:IntegerUpDown Name="SatışŞekliIntegerUpDown" Grid.Row="2" Grid.Column="2" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Stretch" Maximum="5" Minimum="1" />
+                                <TextBlock Grid.Row="2" Grid.Column="1" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam"  Text="Sevk Tarihi : " />
+                                <DatePicker Name="SevkDatePicker" Grid.Row="2" Grid.Column="2" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Stretch"></DatePicker>
+                                <TextBlock Grid.Row="2" Grid.Column="3" FontSize="20" Foreground="Red" Text="*" />
                                 
-                                <TextBlock Grid.Row="3" Grid.Column="1" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam"  Text="Sevk Tarihi : " />
-                                <DatePicker Name="SevkDatePicker" Grid.Row="3" Grid.Column="2" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Stretch"></DatePicker>
-                                <TextBlock Grid.Row="3" Grid.Column="3" FontSize="20" Foreground="Red" Text="*" />
+                                <TextBlock Grid.Row="3" Grid.Column="1" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam" Text="Teslimat Seçenekleri :"></TextBlock>
+                                <GroupBox Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="3" FontWeight="Bold" Background="White">
+                                    <DockPanel>
+                                        <RadioButton Name="FabrikaTeslimRadioButton" FontWeight="Medium" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontFamily="Miriam" IsChecked="True" Content="Fabrika Teslim" />
+                                        <RadioButton Name="InsaatTeslimRadioButton" FontWeight="Medium" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontFamily="Miriam" IsChecked="False" Content="İnşaat Teslim" />    
+                                    </DockPanel>
+                                </GroupBox>
                                 
-                                <TextBlock Grid.Row="4" Grid.Column="1" Margin="0,0,0, 20" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam" Text="Mamulün Cinsi : " />
-                                <TextBox Name="MamulCinsTextBox" Grid.Row="4" Grid.Column="2" Margin="0,0,0, 20" MaxHeight="120" VerticalAlignment="Top" TextAlignment="Right" HorizontalAlignment="Stretch" TextWrapping="NoWrap" AcceptsReturn="True" FontSize="14" VerticalScrollBarVisibility="Auto" />
+                                <TextBlock Grid.Row="4" Grid.Column="1" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam"  Text="Satış Şekli : " />
+                                <xctk:IntegerUpDown Name="SatışŞekliIntegerUpDown" Grid.Row="4" Grid.Column="2" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Stretch" Maximum="5" Minimum="1" />
                                 
-                                <TextBox Name="MamulAdetTextBox" Grid.Row="4" Grid.Column="4" Margin="0,0,0,20" MaxHeight="120" VerticalAlignment="Top" HorizontalAlignment="Stretch" TextWrapping="NoWrap" AcceptsReturn="True" FontSize="14" VerticalScrollBarVisibility="Auto" />
-                                <TextBlock Grid.Row="4" Grid.Column="5" Margin="0,0, 0, 20" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="14" FontFamily="Miriam" Text=" : Mamulün Adedi" />
+                                <TextBlock Grid.Row="5" Grid.Column="1" Margin="0,0,0, 20" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam" Text="Mamulün Cinsi : " />
+                                <TextBox Name="MamulCinsTextBox" Grid.Row="5" Grid.Column="2" Margin="0,0,0, 20" MaxHeight="120" VerticalAlignment="Top" TextAlignment="Right" HorizontalAlignment="Stretch" TextWrapping="NoWrap" AcceptsReturn="True" FontSize="14" VerticalScrollBarVisibility="Auto" />
                                 
-                                <TextBlock Grid.Row="5" Grid.Column="1" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam" Text="Plakalar : " />
-                                <TextBox Name="PlakaTextBox" Grid.Row="5" Grid.Column="2" Margin="0,0,0,20" MaxHeight="64" VerticalAlignment="Top" HorizontalAlignment="Stretch" TextWrapping="Wrap" AcceptsReturn="True" FontSize="14" VerticalScrollBarVisibility="Auto" />
+                                <TextBox Name="MamulAdetTextBox" Grid.Row="5" Grid.Column="4" Margin="0,0,0,20" MaxHeight="120" VerticalAlignment="Top" HorizontalAlignment="Stretch" TextWrapping="NoWrap" AcceptsReturn="True" FontSize="14" VerticalScrollBarVisibility="Auto" />
+                                <TextBlock Grid.Row="5" Grid.Column="5" Margin="0,0, 0, 20" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="14" FontFamily="Miriam" Text=" : Mamulün Adedi" />
                                 
-                                <TextBlock Grid.Row="6" Grid.Column="1" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam" Text="Notlar : " />
-                                <TextBox Name="NotTextBox" Grid.Row="6" Grid.Column="2" Grid.ColumnSpan="3" Margin="0,0,0,20" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" TextWrapping="Wrap" AcceptsReturn="True" FontSize="14" VerticalScrollBarVisibility="Auto" />
+                                <TextBlock Grid.Row="6" Grid.Column="1" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam" Text="Plakalar : " />
+                                <TextBox Name="PlakaTextBox" Grid.Row="6" Grid.Column="2" Margin="0,0,0,20" MaxHeight="64" VerticalAlignment="Top" HorizontalAlignment="Stretch" TextWrapping="Wrap" AcceptsReturn="True" FontSize="14" VerticalScrollBarVisibility="Auto" />
                                 
-                                <TextBlock Grid.Row="7" Grid.Column="1" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam" Text="Araç Sevk Durumu :" />
-                                <ComboBox Name="AraçSevkDurumuComboBox" Grid.Row="7" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="2">
+                                <TextBlock Grid.Row="7" Grid.Column="1" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam" Text="Notlar : " />
+                                <TextBox Name="NotTextBox" Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="3" Margin="0,0,0,20" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" TextWrapping="Wrap" AcceptsReturn="True" FontSize="14" VerticalScrollBarVisibility="Auto" />
+                                
+                                <TextBlock Grid.Row="8" Grid.Column="1" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam" Text="Araç Sevk Durumu :" />
+                                <ComboBox Name="AraçSevkDurumuComboBox" Grid.Row="8" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="2">
                                     <ComboBoxItem Content="Yükleniyor"></ComboBoxItem>
                                     <ComboBoxItem Content="Çıktı"></ComboBoxItem>
                                     <ComboBoxItem Content=""></ComboBoxItem>
@@ -240,6 +236,22 @@ Star Fonts => David, Helvetica,
                         </Border>
                     </ScrollViewer>
             </TabItem>
+            <TabItem Name="HiddenDataGrid" Visibility="Hidden">
+                <DataGrid Name="dg" IsReadOnly="True" ItemsSource="{Binding}" AutoGenerateColumns="False" HeadersVisibility="Column" Width="635">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="#" Binding="{Binding Sayı}" />
+                        <DataGridTextColumn Header="Firma" Binding="{Binding Firma}" />
+                        <DataGridTextColumn Header="Teslimat" Binding="{Binding Teslim}" />
+                        <DataGridTextColumn Header="Satış Şekli" Binding="{Binding SatışŞekli}" />
+                        <DataGridTextColumn Header="Sevk Tarihi" Binding="{Binding SevkTarihi}" />
+
+                        <DataGridTextColumn Header="Mamul Cinsi" Binding="{Binding MamulCinsi}" />
+                        <DataGridTextColumn Header="Mamul Adedi" Binding="{Binding MamulAdedi}" />
+                        <DataGridTextColumn Header="Plakalar" Binding="{Binding Plakalar}" />
+                        <DataGridTextColumn Header="Sevk Durumu" Binding="{Binding SevkDurumu}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
             <TabItem Name="UpdateTabItem" Visibility="Hidden">
                 <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                     <Border Padding="5" Background="AntiqueWhite">
@@ -248,6 +260,7 @@ Star Fonts => David, Helvetica,
                                 <RowDefinition Height="96" />
                                 <RowDefinition Height="48" />
                                 <RowDefinition Height="48" />
+                                <RowDefinition Height="57" />
                                 <RowDefinition Height="48" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
@@ -256,7 +269,7 @@ Star Fonts => David, Helvetica,
                                 <RowDefinition Height="50" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="96" />
+                                <ColumnDefinition Width="144" />
                                 <ColumnDefinition Width="144" />
                                 <ColumnDefinition Width="144" />
                                 <ColumnDefinition Width="18" />
@@ -269,27 +282,35 @@ Star Fonts => David, Helvetica,
                             <TextBlock Grid.Row="1" Grid.Column="3" Text="*" Foreground="Red" FontSize="20" />
                             <TextBlock Name="HataTutucuTextBoxUpdate" Grid.Row="1" Grid.Column="4" Grid.ColumnSpan="5" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Red" FontSize="12" FontWeight="Bold" FontFamily="Arial Rounded MT" Text=""></TextBlock>
                             
-                            <TextBlock Grid.Row="2" Grid.Column="1" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam"  Text="Satış Şekli : " />
-                            <xctk:IntegerUpDown Name="SatışŞekliIntegerUpDownUpdate" Grid.Row="2" Grid.Column="2" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Stretch" Maximum="5" Minimum="1" />
+                            <TextBlock Grid.Row="2" Grid.Column="1" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam"  Text="Sevk Tarihi : " />
+                            <DatePicker Name="SevkDatePickerUpdate" Grid.Row="2" Grid.Column="2" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Stretch"></DatePicker>
+                            <TextBlock Grid.Row="2" Grid.Column="3" FontSize="20" Foreground="Red" Text="*" />
                             
-                            <TextBlock Grid.Row="3" Grid.Column="1" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam"  Text="Sevk Tarihi : " />
-                            <DatePicker Name="SevkDatePickerUpdate" Grid.Row="3" Grid.Column="2" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Stretch"></DatePicker>
-                            <TextBlock Grid.Row="3" Grid.Column="3" FontSize="20" Foreground="Red" Text="*" />
+                            <TextBlock Grid.Row="3" Grid.Column="1" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam" Text="Teslimat Seçenekleri :"></TextBlock>
+                            <GroupBox Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="3" FontWeight="Bold" Background="White">
+                                <DockPanel>
+                                    <RadioButton Name="FabrikaTeslimRadioButtonUpdate" FontWeight="Medium" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontFamily="Miriam" IsChecked="True" Content="Fabrika Teslim" />
+                                    <RadioButton Name="InsaatTeslimRadioButtonUpdate" FontWeight="Medium" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontFamily="Miriam" IsChecked="False" Content="İnşaat Teslim" />    
+                                </DockPanel>
+                            </GroupBox>
                             
-                            <TextBlock Grid.Row="4" Grid.Column="1" Margin="0,0,0, 20" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam" Text="Mamulün Cinsi : " />
-                            <TextBox Name="MamulCinsTextBoxUpdate" Grid.Row="4" Grid.Column="2" Margin="0,0,0, 20" MaxHeight="120" VerticalAlignment="Top" TextAlignment="Right" HorizontalAlignment="Stretch" TextWrapping="NoWrap" AcceptsReturn="True" FontSize="14" VerticalScrollBarVisibility="Auto" />
+                            <TextBlock Grid.Row="4" Grid.Column="1" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam"  Text="Satış Şekli : " />
+                            <xctk:IntegerUpDown Name="SatışŞekliIntegerUpDownUpdate" Grid.Row="4" Grid.Column="2" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Stretch" Maximum="5" Minimum="1" />
+
+                            <TextBlock Grid.Row="5" Grid.Column="1" Margin="0,0,0, 20" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam" Text="Mamulün Cinsi : " />
+                            <TextBox Name="MamulCinsTextBoxUpdate" Grid.Row="5" Grid.Column="2" Margin="0,0,0, 20" MaxHeight="120" VerticalAlignment="Top" TextAlignment="Right" HorizontalAlignment="Stretch" TextWrapping="NoWrap" AcceptsReturn="True" FontSize="14" VerticalScrollBarVisibility="Auto" />
                             
-                            <TextBox Name="MamulAdetTextBoxUpdate" Grid.Row="4" Grid.Column="4" Margin="0,0,0,20" MaxHeight="120" VerticalAlignment="Top" HorizontalAlignment="Stretch" TextWrapping="NoWrap" AcceptsReturn="True" FontSize="14" VerticalScrollBarVisibility="Auto" />
-                            <TextBlock Grid.Row="4" Grid.Column="5" Margin="0,0, 0, 20" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="14" FontFamily="Miriam" Text=" : Mamulün Adedi" />
+                            <TextBox Name="MamulAdetTextBoxUpdate" Grid.Row="5" Grid.Column="4" Margin="0,0,0,20" MaxHeight="120" VerticalAlignment="Top" HorizontalAlignment="Stretch" TextWrapping="NoWrap" AcceptsReturn="True" FontSize="14" VerticalScrollBarVisibility="Auto" />
+                            <TextBlock Grid.Row="5" Grid.Column="5" Margin="0,0, 0, 20" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="14" FontFamily="Miriam" Text=" : Mamulün Adedi" />
                             
-                            <TextBlock Grid.Row="5" Grid.Column="1" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam" Text="Plakalar : " />
-                            <TextBox Name="PlakaTextBoxUpdate" Grid.Row="5" Grid.Column="2" Margin="0,0,0,20" MaxHeight="64" VerticalAlignment="Top" HorizontalAlignment="Stretch" TextWrapping="Wrap" AcceptsReturn="True" FontSize="14" VerticalScrollBarVisibility="Auto" />
+                            <TextBlock Grid.Row="6" Grid.Column="1" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam" Text="Plakalar : " />
+                            <TextBox Name="PlakaTextBoxUpdate" Grid.Row="6" Grid.Column="2" Margin="0,0,0,20" MaxHeight="64" VerticalAlignment="Top" HorizontalAlignment="Stretch" TextWrapping="Wrap" AcceptsReturn="True" FontSize="14" VerticalScrollBarVisibility="Auto" />
                             
-                            <TextBlock Grid.Row="6" Grid.Column="1" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam" Text="Notlar : " />
-                            <TextBox Name="NotTextBoxUpdate" Grid.Row="6" Grid.Column="2" Grid.ColumnSpan="3" Margin="0,0,0,20" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" TextWrapping="Wrap" AcceptsReturn="True" FontSize="14" VerticalScrollBarVisibility="Auto" />
+                            <TextBlock Grid.Row="7" Grid.Column="1" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam" Text="Notlar : " />
+                            <TextBox Name="NotTextBoxUpdate" Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="3" Margin="0,0,0,20" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" TextWrapping="Wrap" AcceptsReturn="True" FontSize="14" VerticalScrollBarVisibility="Auto" />
                             
-                            <TextBlock Grid.Row="7" Grid.Column="1" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam" Text="Araç Sevk Durumu :" />
-                            <ComboBox Name="AraçSevkDurumuComboBoxUpdate" Grid.Row="7" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="2">
+                            <TextBlock Grid.Row="8" Grid.Column="1" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="14" FontFamily="Miriam" Text="Araç Sevk Durumu :" />
+                            <ComboBox Name="AraçSevkDurumuComboBoxUpdate" Grid.Row="8" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="2">
                                 <ComboBoxItem Content="Yükleniyor"></ComboBoxItem>
                                 <ComboBoxItem Content="Çıktı"></ComboBoxItem>
                                 <ComboBoxItem Content=""></ComboBoxItem>
