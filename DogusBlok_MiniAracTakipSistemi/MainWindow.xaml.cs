@@ -132,9 +132,8 @@ namespace DogusBlok_MiniAracTakipSistemi
         private bool UserFilterSearch(object item)
         {
             //Arama Kısmı Denenecek!! !!! !!! !!! !!! !!!
-                return ((item as SevkiyatClass)._Firma_İsim.IndexOf(txtFilter.Text, StringComparison.CurrentCultureIgnoreCase) >= 0) 
-                       || ((item as SevkiyatClass)._Satış_Şekli.ToString().IndexOf(txtFilter.Text, StringComparison.CurrentCultureIgnoreCase) >= 0) 
-                       || ((item as SevkiyatClass)._Sevk_Tarih.IndexOf(txtFilter.Text, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                return ((item as SevkiyatClass)._Firma_İsim.IndexOf(txtFilter.Text, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                       || ((item as SevkiyatClass)._Teslim.IndexOf(txtFilter.Text, StringComparison.CurrentCultureIgnoreCase) >= 0)
                        || ((item as SevkiyatClass)._Mamul_Cins.IndexOf(txtFilter.Text, StringComparison.CurrentCultureIgnoreCase) >= 0)
                        || ((item as SevkiyatClass)._Mamul_Adet.IndexOf(txtFilter.Text, StringComparison.CurrentCultureIgnoreCase) >= 0)
                        || ((item as SevkiyatClass)._Plaka.IndexOf(txtFilter.Text, StringComparison.CurrentCultureIgnoreCase) >= 0)
