@@ -115,8 +115,6 @@ namespace DogusBlok_MiniAracTakipSistemi
 
             BaşlangıçDatePicker.SelectedDate = DateTime.Now;
             BitişDatePicker.SelectedDate = DateTime.Now;
-
-            ListeGöster();
         }
         
         private void BtnSearch_OnClick(object sender, RoutedEventArgs e)
@@ -127,7 +125,7 @@ namespace DogusBlok_MiniAracTakipSistemi
             }
             catch (Exception exception)
             {
-                Debug.WriteLine($"ERR01: Uygun Kaynak Bulunamadı!!!");
+                // ignore
             }
         }
 
@@ -156,8 +154,11 @@ namespace DogusBlok_MiniAracTakipSistemi
             }
         }
 
-        public void ListeGöster()
+        private void ListeGöster()
         {
+            if (BitişDatePicker.Text == "" || BaşlangıçDatePicker.Text == "") return;
+            Debug.WriteLine($"BAŞLANGIÇ = {BaşlangıçDatePicker.Text} & {BitişDatePicker.Text}");
+            
             String mySqlConnectionString = $"server={GenelTerimler.myIp};database={GenelTerimler.databaseName};uid={GenelTerimler.userName};password={GenelTerimler.userPassword};Encrypt=False;";
             SqlConnection mySqlConn = new SqlConnection(mySqlConnectionString);
             items = new List<SevkiyatClass>();
@@ -169,78 +170,71 @@ namespace DogusBlok_MiniAracTakipSistemi
             catch (Exception err)
             {
                 MessageBox.Show($"{err}" +
-                    $"1. Kullandığınız bilgisayarın internet bağlantısını kontrol edin.\n",
-                            "Server Bağlantı Hatası!", MessageBoxButton.OK, MessageBoxImage.Error);
+                                $"1. Kullandığınız bilgisayarın internet bağlantısını kontrol edin.\n" +
+                                $"2. Sql Server Management Studio programının sunucuya bağlı olduğundan emin olun.",
+                    "Server Bağlantı Hatası!", MessageBoxButton.OK, MessageBoxImage.Error);
                 throw;
             }
-
-            try
-            {
-                SqlCommand selectTable = new SqlCommand(@$"SELECT * FROM {GenelTerimler.mainTable} WHERE 
+            
+            SqlCommand selectTable = new SqlCommand(@$"SELECT * FROM {GenelTerimler.mainTable} WHERE 
                 Sevk_Tarih>='{Convert.ToDateTime(BaşlangıçDatePicker.Text).ToString("yyyy-MM-dd")}' AND Sevk_Tarih<='{Convert.ToDateTime(BitişDatePicker.Text).ToString("yyyy-MM-dd")}' ORDER BY 
                 Teslim ASC, Sevk_Tarih ASC", mySqlConn);
-                SqlDataReader myDataReader = selectTable.ExecuteReader();
+            SqlDataReader myDataReader = selectTable.ExecuteReader();
             
-                bool boşlukKarar = true;
-                int i = 1;
-                while ( myDataReader.Read())
-                {
-                    if (myDataReader[1].ToString() == "İnşaat Teslim" && boşlukKarar)
-                    {
-                        for (int j = 0; j < 2; j++) //2 satırlık boşluk.
-                        {
-                            items.Add(new SevkiyatClass()
-                            {
-                                Sıra = i,
-                                _Firma_İsim = "",
-                                _Teslim = "",
-                                _Satış_Şekli = "", 
-                                _Sevk_Tarih = "", 
-                                _Mamul_Cins = "",
-                                _Mamul_Adet = "", 
-                                _Plaka = "",
-                                _Notlar = "", 
-                                _Araç_Sevk_Durumu = ""
-                            });
-
-                            i++;
-                        }
-                        boşlukKarar = false;
-                    }
-                    
-                    items.Add(new SevkiyatClass() { Sıra = i,
-                        _Firma_İsim = myDataReader[0].ToString(),
-                        _Teslim = myDataReader[1].ToString(),
-                        _Satış_Şekli = myDataReader[2].ToString(), 
-                        _Sevk_Tarih = Convert.ToDateTime(myDataReader[3]).ToString("dd.MM.yyyy dddd"), 
-                        _Mamul_Cins = myDataReader[4].ToString(),
-                        _Mamul_Adet = myDataReader[5].ToString(), 
-                        _Plaka = myDataReader[6].ToString(),
-                        _Notlar = myDataReader[7].ToString(), 
-                        _Araç_Sevk_Durumu = myDataReader[8].ToString()
-                    });
-                    
-                    i++;
-                }
-            
-                
-                
-                MainListView.ItemsSource = items;
-                mySqlConn.Close();
-
-                CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(MainListView.ItemsSource);
-                view.Filter = UserFilterSearch;
-                
-                if (Convert.ToDateTime(BaşlangıçDatePicker.Text) > Convert.ToDateTime(BitişDatePicker.Text))
-                {
-                    BitişDatePicker.Text = BaşlangıçDatePicker.Text;
-                }
-            }
-            catch (Exception e)
+            bool boşlukKarar = true;
+            int i = 1;
+            while ( myDataReader.Read())
             {
-                Debug.WriteLine($"catch yakala = {e}");
+                if (myDataReader[1].ToString() == "İnşaat Teslim" && boşlukKarar)
+                {
+                    for (int j = 0; j < 2; j++) //2 satırlık boşluk.
+                    {
+                        items.Add(new SevkiyatClass()
+                        {
+                            Sıra = i,
+                            _Firma_İsim = "",
+                            _Teslim = "",
+                            _Satış_Şekli = "", 
+                            _Sevk_Tarih = "", 
+                            _Mamul_Cins = "",
+                            _Mamul_Adet = "", 
+                            _Plaka = "",
+                            _Notlar = "", 
+                            _Araç_Sevk_Durumu = ""
+                        });
+
+                        i++;
+                    }
+                    boşlukKarar = false;
+                }
+                    
+                items.Add(new SevkiyatClass() { Sıra = i,
+                    _Firma_İsim = myDataReader[0].ToString(),
+                    _Teslim = myDataReader[1].ToString(),
+                    _Satış_Şekli = myDataReader[2].ToString(), 
+                    _Sevk_Tarih = Convert.ToDateTime(myDataReader[3]).ToString("dd.MM.yyyy dddd"), 
+                    _Mamul_Cins = myDataReader[4].ToString(),
+                    _Mamul_Adet = myDataReader[5].ToString(), 
+                    _Plaka = myDataReader[6].ToString(),
+                    _Notlar = myDataReader[7].ToString(), 
+                    _Araç_Sevk_Durumu = myDataReader[8].ToString()
+                });
+                    
+                i++;
             }
             
+                
+                
+            MainListView.ItemsSource = items;
+            mySqlConn.Close();
+
+            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(MainListView.ItemsSource);
+            view.Filter = UserFilterSearch;
+                
+            if (Convert.ToDateTime(BaşlangıçDatePicker.Text) > Convert.ToDateTime(BitişDatePicker.Text))
+            {
+                BitişDatePicker.Text = BaşlangıçDatePicker.Text;
+            }
         }
         
         private void BtnAdd_OnClick(object sender, RoutedEventArgs e)
@@ -270,8 +264,7 @@ namespace DogusBlok_MiniAracTakipSistemi
                         catch (Exception exception)
                         {
                             MessageBox.Show($"1. Kullandığınız bilgisayarın internet bağlantısını kontrol edin.\n" +
-                                            $"2. Lütfen Server IP'sinin {GenelTerimler.myIp} olduğundan emin olun. ('Çözüm 1 Server Bağlantı Hatası.mkv' Videosunu izleyin.)\n" +
-                                            $"3. Sunucuda Wampserver programı aktif şekilde çalıştığını kontrol edin. (Çözüm 2 Server Bağlantı Hatası.mkv' Videosunu izleyin.)",
+                                            $"2. Sql Server Management Studio programının sunucuya bağlı olduğundan emin olun.",
                                 "Server Bağlantı Hatası!", MessageBoxButton.OK, MessageBoxImage.Error);
                             throw;
                         }
@@ -409,7 +402,7 @@ namespace DogusBlok_MiniAracTakipSistemi
                 catch (Exception err)
                 {
                     MessageBox.Show($"1. Kullandığınız bilgisayarın internet bağlantısını kontrol edin.\n" +
-                                    $"2. Sunucuda Wampserver programı aktif şekilde çalıştığını kontrol edin. (Çözüm 2 Server Bağlantı Hatası.mkv' Videosunu izleyin.)",
+                                    $"2. Sql Server Management Studio programının sunucuya bağlı olduğundan emin olun.",
                         "Server Bağlantı Hatası!", MessageBoxButton.OK, MessageBoxImage.Error);
                     throw;
                 }
@@ -518,7 +511,7 @@ namespace DogusBlok_MiniAracTakipSistemi
                 catch (Exception err)
                 {
                     MessageBox.Show($"1. Kullandığınız bilgisayarın internet bağlantısını kontrol edin.\n" +
-                                    $"2. Sunucuda Wampserver programı aktif şekilde çalıştığını kontrol edin. (Çözüm 2 Server Bağlantı Hatası.mkv' Videosunu izleyin.)",
+                                    $"2. Sql Server Management Studio programının sunucuya bağlı olduğundan emin olun.",
                         "Server Bağlantı Hatası!", MessageBoxButton.OK, MessageBoxImage.Error);
                     throw;
                 }
@@ -554,7 +547,7 @@ namespace DogusBlok_MiniAracTakipSistemi
         
         private void Date_OnSelectedDateChanged(object? sender, SelectionChangedEventArgs e)
         {
-            if (sender != null && sender.ToString() != "")
+            if (BaşlangıçDatePicker.Text != "" && BitişDatePicker.Text != "")
             {
                 ListeGöster();
             }
@@ -593,7 +586,7 @@ namespace DogusBlok_MiniAracTakipSistemi
 
                         foreach (var s in items)
                         {
-                            if (s._Araç_Sevk_Durumu == "")
+                            if (s._Araç_Sevk_Durumu == "" && s._Firma_İsim != "") 
                             {
                                 s._Araç_Sevk_Durumu = "Gelmedi";
                             }
@@ -603,11 +596,18 @@ namespace DogusBlok_MiniAracTakipSistemi
                         }
 
                         workbook.Worksheets.Add(dt, "Doğuş Blok");
-                        workbook.SaveAs(sfd.FileName);
+                        try
+                        {
+                            workbook.SaveAs(sfd.FileName);
+                            MessageBox.Show("Excel Dosyanız Kaydedilmiştir.", "Mesaj", MessageBoxButton.OK,
+                                MessageBoxImage.Information);
+                        }
+                        catch
+                        {
+                            MessageBox.Show("Bilgisayarınızda, kaydetmeye çalıştığınız Excel dosyasıyla aynı isimde bir dosya açık.\n" +
+                                            "Lütfen açık olan Excel dosyasını kapatıp tekrar deneyin.", "Excel Hata!", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        }
                     }
-
-                    MessageBox.Show("Excel Dosyanız Kaydedilmiştir.", "Mesaj", MessageBoxButton.OK,
-                        MessageBoxImage.Information);
                 }
                 catch (Exception exception)
                 {
@@ -635,7 +635,7 @@ namespace DogusBlok_MiniAracTakipSistemi
             });
             foreach (var s in items)
             {
-                if (s._Araç_Sevk_Durumu == "")
+                if (s._Araç_Sevk_Durumu == "" && s._Firma_İsim != "")
                 {
                     s._Araç_Sevk_Durumu = "Gelmedi";
                 }
@@ -729,12 +729,13 @@ namespace DogusBlok_MiniAracTakipSistemi
                 try
                 {
                     printDialog.PrintDocument(((IDocumentPaginatorSource)fd).DocumentPaginator, "");
+                    MessageBox.Show("PDF Dosyanız Kaydedilmiştir.","Mesaj",MessageBoxButton.OK,MessageBoxImage.Information);
                 }
                 catch (Exception e)
                 {
                     MessageBox.Show(
                         "Kaydetmeye çalıştığınız PDF dosyasıyla aynı isimde bir PDF dosyası bilgisayarınızda açık. \nLütfen açık olan PDF dosyasını kapatın ve tekrar deneyin.",
-                        "Hata!",MessageBoxButton.OK, MessageBoxImage.Stop);
+                        "Hata!",MessageBoxButton.OK, MessageBoxImage.Warning);
                     Console.WriteLine(e);
                     
                 }
