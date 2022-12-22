@@ -140,13 +140,13 @@ Star Fonts => David, Helvetica,
                                                 </Style>
                                             </DataGrid.Resources>
                                             <DataGrid.Columns>
-                                                <DataGridTextColumn Header="#" Binding="{Binding _Sıra}" Width="50" />
+                                                <DataGridTextColumn Header="#" Binding="{Binding Sıra}" Width="50" />
                                                 <DataGridTextColumn Header="Firma" Binding="{Binding _Firma_İsim}" Width="250" />
-                                                <DataGridTextColumn Header="Teslimat" Binding="{Binding _Teslim}" Visibility="Visible" />
+                                                <DataGridTextColumn Header="Teslim" Binding="{Binding _Teslim}" Visibility="Visible" Width="60" />
                                                 <DataGridTextColumn Header="Satış Şekli" Binding="{Binding _Satış_Şekli}" Width="100" />
                                                 <DataGridTextColumn Header="Sevk Tarihi" Binding="{Binding _Sevk_Tarih}" Width="175" />
-                                                <DataGridTextColumn Header="Mamul Cinsi" Binding="{Binding _Mamul_Cins}" Width="175" />
-                                                <DataGridTextColumn Header="Mamul Adedi" Binding="{Binding _Mamul_Adet}" Width="175" />
+                                                <DataGridTextColumn Header="Mamul Cins" Binding="{Binding _Mamul_Cins}" Width="175" />
+                                                <DataGridTextColumn Header="Mamul Adet" Binding="{Binding _Mamul_Adet}" Width="175" />
                                                 <DataGridTextColumn Header="Plakalar" Binding="{Binding _Plaka}" Width="110" />
                                                 <DataGridTextColumn Header="Notlar" Binding="{Binding _Notlar}" Width="200" FontSize="12" FontWeight="Normal" />
                                                 <DataGridTextColumn Header="Sevk Durumu" Binding="{Binding _Araç_Sevk_Durumu}" Width="100" />

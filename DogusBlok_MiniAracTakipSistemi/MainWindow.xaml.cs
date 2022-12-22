@@ -24,7 +24,7 @@ namespace DogusBlok_MiniAracTakipSistemi
 {
     public class SevkiyatClass
     {
-        public int? _Sıra { get; set; }
+        public int? Sıra { get; set; }
         public string? _Firma_İsim { get; set; }
         public string? _Teslim { get; set; }
         public string? _Satış_Şekli { get; set; }
@@ -35,7 +35,7 @@ namespace DogusBlok_MiniAracTakipSistemi
         public string? _Notlar { get; set; }
         public string? _Araç_Sevk_Durumu { get; set; }
     }
-    
+
     public class GenelTerimler
     {
         public static string? myIp { get; set; }
@@ -43,7 +43,6 @@ namespace DogusBlok_MiniAracTakipSistemi
         public static string? userName { get; set; }
         public static string? userPassword { get; set; }
         public static string? mainTable { get; set; }
-        public static string? charset { get; set; }
     }
 
     public partial class MainWindow : Window
@@ -153,7 +152,7 @@ namespace DogusBlok_MiniAracTakipSistemi
             }
             catch (Exception exception)
             {
-                Debug.WriteLine($"ERR01: Uygun Kaynak Bulunamadı!!!");
+                // ignore
             }
         }
 
@@ -178,13 +177,38 @@ namespace DogusBlok_MiniAracTakipSistemi
             try
             {
                 SqlCommand selectTable = new SqlCommand(@$"SELECT * FROM {GenelTerimler.mainTable} WHERE 
-                Sevk_Tarih>='{Convert.ToDateTime(BaşlangıçDatePicker.Text).ToString("yyyy-MM-dd")}' AND Sevk_Tarih<='{Convert.ToDateTime(BitişDatePicker.Text).ToString("yyyy-MM-dd")}'", mySqlConn);
+                Sevk_Tarih>='{Convert.ToDateTime(BaşlangıçDatePicker.Text).ToString("yyyy-MM-dd")}' AND Sevk_Tarih<='{Convert.ToDateTime(BitişDatePicker.Text).ToString("yyyy-MM-dd")}' ORDER BY 
+                Teslim ASC, Sevk_Tarih ASC", mySqlConn);
                 SqlDataReader myDataReader = selectTable.ExecuteReader();
             
+                bool boşlukKarar = true;
                 int i = 1;
                 while ( myDataReader.Read())
                 {
-                    items.Add(new SevkiyatClass() { _Sıra = i,
+                    if (myDataReader[1].ToString() == "İnşaat Teslim" && boşlukKarar)
+                    {
+                        for (int j = 0; j < 2; j++) //2 satırlık boşluk.
+                        {
+                            items.Add(new SevkiyatClass()
+                            {
+                                Sıra = i,
+                                _Firma_İsim = "",
+                                _Teslim = "",
+                                _Satış_Şekli = "", 
+                                _Sevk_Tarih = "", 
+                                _Mamul_Cins = "",
+                                _Mamul_Adet = "", 
+                                _Plaka = "",
+                                _Notlar = "", 
+                                _Araç_Sevk_Durumu = ""
+                            });
+
+                            i++;
+                        }
+                        boşlukKarar = false;
+                    }
+                    
+                    items.Add(new SevkiyatClass() { Sıra = i,
                         _Firma_İsim = myDataReader[0].ToString(),
                         _Teslim = myDataReader[1].ToString(),
                         _Satış_Şekli = myDataReader[2].ToString(), 
@@ -195,9 +219,11 @@ namespace DogusBlok_MiniAracTakipSistemi
                         _Notlar = myDataReader[7].ToString(), 
                         _Araç_Sevk_Durumu = myDataReader[8].ToString()
                     });
-
+                    
                     i++;
                 }
+            
+                
                 
                 MainListView.ItemsSource = items;
                 mySqlConn.Close();
@@ -276,6 +302,7 @@ namespace DogusBlok_MiniAracTakipSistemi
         {
             SevkiyatClass rowSevkiyat = MainListView.SelectedItem as SevkiyatClass;
 
+            if (rowSevkiyat?._Firma_İsim == "") return;
             UpdateTabItem.IsSelected = true;
             FirmaTextBoxUpdate.Text = rowSevkiyat._Firma_İsim;
             SatışŞekliIntegerUpDownUpdate.Text = rowSevkiyat._Satış_Şekli;
@@ -296,8 +323,6 @@ namespace DogusBlok_MiniAracTakipSistemi
                 FabrikaTeslimRadioButtonUpdate.IsChecked = false;
                 InsaatTeslimRadioButtonUpdate.IsChecked = true;
             }
-            
-            
         }
         
         private void ButtonGüncelle_OnClick(object sender, RoutedEventArgs e)
@@ -573,7 +598,7 @@ namespace DogusBlok_MiniAracTakipSistemi
                                 s._Araç_Sevk_Durumu = "Gelmedi";
                             }
                             
-                            dt.Rows.Add(s._Sıra, s._Firma_İsim, s._Teslim, s._Satış_Şekli, s._Sevk_Tarih, s._Mamul_Cins,
+                            dt.Rows.Add(s.Sıra, s._Firma_İsim, s._Teslim, s._Satış_Şekli, s._Sevk_Tarih, s._Mamul_Cins,
                                 s._Mamul_Adet, s._Plaka, s._Notlar, s._Araç_Sevk_Durumu);
                         }
 
@@ -615,7 +640,7 @@ namespace DogusBlok_MiniAracTakipSistemi
                     s._Araç_Sevk_Durumu = "Gelmedi";
                 }
                 
-                dt.Rows.Add(s._Sıra, s._Firma_İsim, s._Teslim, s._Satış_Şekli, s._Sevk_Tarih, s._Mamul_Cins,
+                dt.Rows.Add(s.Sıra, s._Firma_İsim, s._Teslim, s._Satış_Şekli, s._Sevk_Tarih, s._Mamul_Cins,
                     s._Mamul_Adet, s._Plaka, s._Araç_Sevk_Durumu);
             }
             
