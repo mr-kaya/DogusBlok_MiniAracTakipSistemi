@@ -184,39 +184,16 @@ namespace DogusBlok_MiniAracTakipSistemi
             int i = 1;
             while ( myDataReader.Read())
             {
-                if (myDataReader[1].ToString() == "İnşaat Teslim" && boşlukKarar)
-                {
-                    for (int j = 0; j < 2; j++) //2 satırlık boşluk.
-                    {
-                        items.Add(new SevkiyatClass()
-                        {
-                            Sıra = i,
-                            _Firma_İsim = "",
-                            _Teslim = "",
-                            _Satış_Şekli = "", 
-                            _Sevk_Tarih = "", 
-                            _Mamul_Cins = "",
-                            _Mamul_Adet = "", 
-                            _Plaka = "",
-                            _Notlar = "", 
-                            _Araç_Sevk_Durumu = ""
-                        });
-
-                        i++;
-                    }
-                    boşlukKarar = false;
-                }
-                    
                 items.Add(new SevkiyatClass() { Sıra = i,
                     _Firma_İsim = myDataReader[0].ToString(),
-                    _Teslim = myDataReader[1].ToString(),
-                    _Satış_Şekli = myDataReader[2].ToString(), 
-                    _Sevk_Tarih = Convert.ToDateTime(myDataReader[3]).ToString("dd.MM.yyyy dddd"), 
-                    _Mamul_Cins = myDataReader[4].ToString(),
-                    _Mamul_Adet = myDataReader[5].ToString(), 
-                    _Plaka = myDataReader[6].ToString(),
-                    _Notlar = myDataReader[7].ToString(), 
-                    _Araç_Sevk_Durumu = myDataReader[8].ToString()
+                    _Teslim = myDataReader[8].ToString(),
+                    _Satış_Şekli = myDataReader[1].ToString(), 
+                    _Sevk_Tarih = Convert.ToDateTime(myDataReader[2]).ToString("dd.MM.yyyy dddd"), 
+                    _Mamul_Cins = myDataReader[3].ToString(),
+                    _Mamul_Adet = myDataReader[4].ToString(), 
+                    _Plaka = myDataReader[5].ToString(),
+                    _Notlar = myDataReader[6].ToString(), 
+                    _Araç_Sevk_Durumu = myDataReader[7].ToString()
                 });
                     
                 i++;
@@ -268,7 +245,7 @@ namespace DogusBlok_MiniAracTakipSistemi
                             throw;
                         }
                         
-                        SqlCommand sqlSil = new SqlCommand($@"DELETE FROM {GenelTerimler.mainTable} WHERE 
+                        SqlCommand sqlSil = new SqlCommand($@"DELETE TOP(1) FROM {GenelTerimler.mainTable} WHERE 
                                 Firma LIKE '{sevkiyatClass._Firma_İsim}' AND Teslim LIKE '{sevkiyatClass._Teslim}' AND Satis_Sekli LIKE '{sevkiyatClass._Satış_Şekli}' AND Sevk_Tarih LIKE '{Convert.ToDateTime(sevkiyatClass._Sevk_Tarih).ToString("yyyy-MM-dd")}' AND
                                 Mamul_Cins LIKE '{sevkiyatClass._Mamul_Cins}' AND Mamul_Aded LIKE '{sevkiyatClass._Mamul_Adet}' AND Plaka LIKE '{sevkiyatClass._Plaka}' AND
                                 Notlar LIKE '{sevkiyatClass._Notlar}' AND Arac_Sevk_Durumu LIKE '{sevkiyatClass._Araç_Sevk_Durumu}'", mySqlConn);
@@ -407,7 +384,7 @@ namespace DogusBlok_MiniAracTakipSistemi
                 }
 
                 SevkiyatClass rowSevkiyat = MainListView.SelectedItem as SevkiyatClass;
-                SqlCommand updateCommand = new SqlCommand($@"UPDATE {GenelTerimler.mainTable} SET 
+                SqlCommand updateCommand = new SqlCommand($@"UPDATE TOP(1) {GenelTerimler.mainTable} SET 
                            Firma='{firmaİsim}', Teslim='{teslimRadioButton}', Satis_Sekli='{SatışŞekliIntegerUpDownUpdate.Text}', Sevk_Tarih='{Convert.ToDateTime(SevkDatePickerUpdate.Text).ToString("yyyy-MM-dd")}', 
                            Mamul_Cins='{MamulCinsTextBoxUpdate.Text.Replace("'","\"")}', Mamul_Aded='{MamulAdetTextBoxUpdate.Text.Replace("'","\"")}', Plaka='{plakaNumarası}',
                            Notlar='{NotTextBoxUpdate.Text.Replace("'","\"")}', Arac_Sevk_Durumu='{AraçSevkDurumuComboBoxUpdate.Text}' 
