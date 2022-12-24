@@ -177,7 +177,7 @@ namespace DogusBlok_MiniAracTakipSistemi
             
             SqlCommand selectTable = new SqlCommand(@$"SELECT * FROM {GenelTerimler.mainTable} WHERE 
                 Sevk_Tarih>='{Convert.ToDateTime(BaşlangıçDatePicker.Text).ToString("yyyy-MM-dd")}' AND Sevk_Tarih<='{Convert.ToDateTime(BitişDatePicker.Text).ToString("yyyy-MM-dd")}' ORDER BY 
-                Teslim ASC, Sevk_Tarih ASC", mySqlConn);
+                Teslim ASC, Sevk_Tarih ASC, Firma ASC", mySqlConn);
             SqlDataReader myDataReader = selectTable.ExecuteReader();
             
             bool boşlukKarar = true;
