@@ -28,3 +28,5 @@ GO
     ClosedXML
     Extended.Wpf.Toolkit
     Microsoft.Data.SqlClient
+
+[Resim gösterilemiyor...]https://github.com/mr-kaya/AllImage/blob/main/Do%C4%9Fu%C5%9F%20Blok%20Sevkiyat%20Image/1.png
