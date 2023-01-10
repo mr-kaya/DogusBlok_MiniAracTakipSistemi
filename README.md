@@ -29,4 +29,5 @@ GO
     Extended.Wpf.Toolkit
     Microsoft.Data.SqlClient
 
-[Resim gösterilemiyor...](https://github.com/mr-kaya/AllImage/blob/main/Do%C4%9Fu%C5%9F%20Blok%20Sevkiyat%20Image/1.png?raw=true)
+![1](https://user-images.githubusercontent.com/18140418/211635743-90322abe-9466-44fb-9595-0bff6be8f5cc.png)
+
